@@ -1,11 +1,11 @@
 import Container from '@mui/material/Container';
 
-const QuizView: React.FC = () => {
+const SurveyView: React.FC = () => {
     return (
         <Container>
-            <h2>Quiz.</h2>
+            <h2>Survey.</h2>
         </Container>
     );
 };
 
-export default QuizView;
+export default SurveyView;

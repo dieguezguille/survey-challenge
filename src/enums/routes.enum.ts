@@ -1,7 +1,7 @@
 export enum RoutesEnum {
     BASE = '/',
     MAIN = '/main',
-    QUIZ = '/quiz',
+    SURVEY = '/survey',
     RESULTS = '/results',
     FORBIDDEN = '/forbidden',
     NO_MATCH = '*',

@@ -6,7 +6,7 @@ import ContentLayout from '../layout/content-layout';
 import ErrorView from '../views/error/error.view';
 import ForbiddenView from '../views/forbidden/forbidden.view';
 import MainView from '../views/main/main.view';
-import QuizView from '../views/quiz/quiz.view';
+import SurveyView from '../views/survey/survey.view';
 import ResultsView from '../views/results/results.view';
 
 const DefaultRoutes = [
@@ -23,8 +23,8 @@ const DefaultRoutes = [
                 element: <MainView />,
             },
             {
-                path: RoutesEnum.QUIZ,
-                element: <QuizView />,
+                path: RoutesEnum.SURVEY,
+                element: <SurveyView />,
             },
             {
                 path: RoutesEnum.RESULTS,

@@ -11,19 +11,19 @@ import contractAbi from '../../abis/survey.json';
 import { AppContext } from './app.context';
 import { WalletContext } from './wallet.context';
 
-type QuizContextProps = {
+type SurveyContextProps = {
     balance: number;
     getBalance: () => Promise<void>;
 };
 
-const defaultValues: QuizContextProps = {
+const defaultValues: SurveyContextProps = {
     balance: 0,
     getBalance: async () => {},
 };
 
-export const QuizContext = createContext(defaultValues);
+export const SurveyContext = createContext(defaultValues);
 
-const QuizContextProvider: React.FC = ({ children }) => {
+const SurveyContextProvider: React.FC = ({ children }) => {
     const { setIsLoading } = useContext(AppContext);
     const { address, provider } = useContext(WalletContext);
     const { enqueueSnackbar } = useSnackbar();
@@ -86,10 +86,10 @@ const QuizContextProvider: React.FC = ({ children }) => {
     };
 
     return (
-        <QuizContext.Provider value={contextValue}>
+        <SurveyContext.Provider value={contextValue}>
             {children}
-        </QuizContext.Provider>
+        </SurveyContext.Provider>
     );
 };
 
-export default QuizContextProvider;
+export default SurveyContextProvider;
