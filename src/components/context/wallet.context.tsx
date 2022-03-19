@@ -5,10 +5,12 @@ import React, {
     Dispatch,
     SetStateAction,
     useCallback,
+    useContext,
     useEffect,
     useState,
 } from 'react';
 import useMetamaskUtils from '../../hooks/metamask-utils.hook';
+import { AppContext } from './app.context';
 
 type WalletContextType = {
     isConnected: boolean;
@@ -45,6 +47,8 @@ export const WalletContext = createContext(defaultValues);
 const WalletContextProvider: React.FC = ({ children }) => {
     const { enqueueSnackbar } = useSnackbar();
     const { isMetamaskError } = useMetamaskUtils();
+    const { setIsLoading } = useContext(AppContext);
+
     const [isConnected, setIsConnected] = useState<boolean>(
         defaultValues.isConnected
     );
@@ -62,27 +66,51 @@ const WalletContextProvider: React.FC = ({ children }) => {
     );
 
     const disconnect = useCallback(() => {
-        setIsConnected(false);
-        setAddress(undefined);
-        enqueueSnackbar('Disconnected from Metamask', { variant: 'info' });
-    }, [enqueueSnackbar]);
+        setIsLoading(true);
+        try {
+            setIsConnected(false);
+            setAddress(undefined);
+            enqueueSnackbar('Disconnected from Metamask', { variant: 'info' });
+        } catch (error) {
+            enqueueSnackbar('Unable to disconnect from Metamask', {
+                variant: 'error',
+            });
+        } finally {
+            setIsLoading(false);
+        }
+    }, [enqueueSnackbar, setIsLoading]);
 
     const checkChain = useCallback(async () => {
-        const network = await provider?.getNetwork();
-        const chain = network?.chainId;
-        if (chain && chain.toString() !== process.env.REACT_APP_TESTNET_ID) {
-            enqueueSnackbar(
-                'Unsupported chain detected. Make sure to be connected to Ropsten Network',
-                { variant: 'error' }
-            );
-            setIsInvalidChain(true);
-            disconnect();
-        } else {
-            setIsInvalidChain(false);
+        setIsLoading(true);
+        try {
+            if (!provider) return;
+            const network = await provider.getNetwork();
+            const chain = network.chainId;
+            if (
+                chain &&
+                chain.toString() !== process.env.REACT_APP_TESTNET_ID
+            ) {
+                enqueueSnackbar(
+                    'Unsupported chain detected. Make sure to be connected to Ropsten Network',
+                    { variant: 'error' }
+                );
+                setIsInvalidChain(true);
+                disconnect();
+            } else {
+                setIsInvalidChain(false);
+            }
+        } catch (error) {
+            enqueueSnackbar('Error validating current network', {
+                variant: 'error',
+            });
+            console.log(error);
+        } finally {
+            setIsLoading(false);
         }
-    }, [disconnect, enqueueSnackbar, provider]);
+    }, [disconnect, enqueueSnackbar, provider, setIsLoading]);
 
     const requestChainSwitch = useCallback(async () => {
+        setIsLoading(true);
         try {
             await provider?.send('wallet_switchEthereumChain', [
                 {
@@ -109,20 +137,37 @@ const WalletContextProvider: React.FC = ({ children }) => {
                 enqueueSnackbar('Operation failed', { variant: 'error' });
                 console.log(error);
             }
+        } finally {
+            setIsLoading(false);
         }
-    }, [enqueueSnackbar, isMetamaskError, provider]);
+    }, [enqueueSnackbar, isMetamaskError, provider, setIsLoading]);
 
     const connect = useCallback(async () => {
-        if (provider) {
-            checkChain();
-            const result = await provider.send('eth_requestAccounts', []);
-            if (result && result.length > 0) {
-                setAddress(result[0]);
-                setIsConnected(true);
-                enqueueSnackbar('Connected to Metamask', { variant: 'info' });
+        try {
+            if (provider) {
+                checkChain();
+                const result = await provider.send('eth_requestAccounts', []);
+                if (result && result.length > 0) {
+                    setAddress(result[0]);
+                    setIsConnected(true);
+                    enqueueSnackbar('Connected to Metamask', {
+                        variant: 'info',
+                    });
+                }
+            } else {
+                enqueueSnackbar('No Ethereum provider detected.', {
+                    variant: 'error',
+                });
             }
+        } catch (error) {
+            enqueueSnackbar('Unable to connect to Metamask.', {
+                variant: 'error',
+            });
+            console.log(error);
+        } finally {
+            setIsLoading(false);
         }
-    }, [checkChain, enqueueSnackbar, provider]);
+    }, [checkChain, enqueueSnackbar, provider, setIsLoading]);
 
     const contextValue = {
         isConnected,
