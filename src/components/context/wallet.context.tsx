@@ -10,7 +10,7 @@ import React, {
 } from 'react';
 import useMetamaskUtils from '../../hooks/metamask-utils.hook';
 
-type WalletContextProps = {
+type WalletContextType = {
     isConnected: boolean;
     setIsConnected: Dispatch<SetStateAction<boolean>>;
     address: string | undefined;
@@ -26,7 +26,7 @@ type WalletContextProps = {
     disconnect: () => void;
 };
 
-const defaultValues: WalletContextProps = {
+const defaultValues: WalletContextType = {
     isConnected: false,
     setIsConnected: () => {},
     address: undefined,

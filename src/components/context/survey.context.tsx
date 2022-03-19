@@ -5,6 +5,7 @@ import React, {
     useCallback,
     useContext,
     useEffect,
+    useMemo,
     useState,
 } from 'react';
 import contractAbi from '../../abis/survey.json';
@@ -13,14 +14,14 @@ import ISurvey from '../../models/survey.model';
 import { AppContext } from './app.context';
 import { WalletContext } from './wallet.context';
 
-type SurveyContextProps = {
+type SurveyContextType = {
     balance: number;
     getBalance: () => Promise<void>;
     survey: ISurvey | undefined;
     getDailySurvey: () => Promise<void>;
 };
 
-const defaultValues: SurveyContextProps = {
+const defaultValues: SurveyContextType = {
     balance: 0,
     getBalance: async () => {},
     survey: undefined,
@@ -57,7 +58,7 @@ const SurveyContextProvider: React.FC = ({ children }) => {
         try {
             if (contract && address) {
                 const result = await contract.balanceOf(address);
-                const newBalance = await ethers.utils.formatUnits(result, 18);
+                const newBalance = ethers.utils.formatUnits(result, 18);
                 setBalance(parseFloat(newBalance));
             }
         } catch (error) {
@@ -73,7 +74,7 @@ const SurveyContextProvider: React.FC = ({ children }) => {
             const contractAddress = process.env.REACT_APP_CONTRACT_ADDRESS;
             if (contractAddress) {
                 setContract(
-                    await new ethers.Contract(
+                    new ethers.Contract(
                         contractAddress,
                         contractAbi,
                         provider?.getSigner()
@@ -100,14 +101,17 @@ const SurveyContextProvider: React.FC = ({ children }) => {
         }
     }, [contract, loadContract]);
 
-    const contextValue = {
-        balance,
-        getBalance,
-        setBalance,
-        contract,
-        survey,
-        getDailySurvey,
-    };
+    const contextValue = useMemo(
+        () => ({
+            balance,
+            getBalance,
+            setBalance,
+            contract,
+            survey,
+            getDailySurvey,
+        }),
+        [balance, contract, getBalance, getDailySurvey, survey]
+    );
 
     return (
         <SurveyContext.Provider value={contextValue}>

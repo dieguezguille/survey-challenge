@@ -5,12 +5,12 @@ import React, {
     useState,
 } from 'react';
 
-type AppContextProps = {
+type AppContextType = {
     isLoading: boolean;
     setIsLoading: Dispatch<SetStateAction<boolean>>;
 };
 
-const defaultValues: AppContextProps = {
+const defaultValues: AppContextType = {
     isLoading: false,
     setIsLoading: () => {},
 };
