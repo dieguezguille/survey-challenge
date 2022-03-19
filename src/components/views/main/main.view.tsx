@@ -3,10 +3,17 @@ import Container from '@mui/material/Container';
 import { useContext, useEffect } from 'react';
 import { SurveyContext } from '../../context/survey.context';
 import Image from 'mui-image';
+import { useNavigate } from 'react-router-dom';
+import { RoutesEnum } from '../../../enums/routes.enum';
 
 const MainView: React.FC = () => {
+    const navigate = useNavigate();
     const { balance, getBalance, getDailySurvey, survey } =
         useContext(SurveyContext);
+
+    const handleSurveyStart = () => {
+        navigate(RoutesEnum.SURVEY);
+    };
 
     useEffect(() => {
         getBalance();
@@ -49,7 +56,11 @@ const MainView: React.FC = () => {
                         >
                             <Image src={survey.image} showLoading />
                         </Box>
-                        <Button color="secondary" variant="outlined">
+                        <Button
+                            color="secondary"
+                            variant="outlined"
+                            onClick={handleSurveyStart}
+                        >
                             Begin Answering
                         </Button>
                     </Stack>

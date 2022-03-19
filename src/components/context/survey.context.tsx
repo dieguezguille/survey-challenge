@@ -10,7 +10,7 @@ import React, {
 } from 'react';
 import contractAbi from '../../abis/survey.json';
 import { getSurvey } from '../../adapters/survey.adapter';
-import ISurvey from '../../models/survey.model';
+import { ISurvey, ISurveyQuestion } from '../../models/survey.model';
 import { AppContext } from './app.context';
 import { WalletContext } from './wallet.context';
 
@@ -19,6 +19,7 @@ type SurveyContextType = {
     getBalance: () => Promise<void>;
     survey: ISurvey | undefined;
     getDailySurvey: () => Promise<void>;
+    isSurveyStarted: boolean;
 };
 
 const defaultValues: SurveyContextType = {
@@ -26,6 +27,7 @@ const defaultValues: SurveyContextType = {
     getBalance: async () => {},
     survey: undefined,
     getDailySurvey: async () => {},
+    isSurveyStarted: false,
 };
 
 export const SurveyContext = createContext(defaultValues);
@@ -38,6 +40,12 @@ const SurveyContextProvider: React.FC = ({ children }) => {
     const [balance, setBalance] = useState<number>(defaultValues.balance);
     const [contract, setContract] = useState<Contract | undefined>(undefined);
     const [survey, setSurvey] = useState<ISurvey | undefined>(undefined);
+    const [isSurveyStarted, setIsSurveyStarted] = useState<boolean>(
+        defaultValues.isSurveyStarted
+    );
+    const [currentQuestion, setCurrentQuestion] = useState<
+        ISurveyQuestion | undefined
+    >(undefined);
 
     const getDailySurvey = useCallback(async () => {
         setIsLoading(true);
@@ -52,6 +60,10 @@ const SurveyContextProvider: React.FC = ({ children }) => {
             setIsLoading(false);
         }
     }, [enqueueSnackbar, setIsLoading]);
+
+    const startSurvey = () => {
+        setIsSurveyStarted(true);
+    };
 
     const getBalance = useCallback(async () => {
         setIsLoading(true);
@@ -109,8 +121,9 @@ const SurveyContextProvider: React.FC = ({ children }) => {
             contract,
             survey,
             getDailySurvey,
+            isSurveyStarted,
         }),
-        [balance, contract, getBalance, getDailySurvey, survey]
+        [balance, contract, getBalance, getDailySurvey, isSurveyStarted, survey]
     );
 
     return (
