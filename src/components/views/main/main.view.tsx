@@ -5,6 +5,7 @@ import { SurveyContext } from '../../context/survey.context';
 import Image from 'mui-image';
 import { useNavigate } from 'react-router-dom';
 import { RoutesEnum } from '../../../enums/routes.enum';
+import { CustomPill, SurveyImageWrapper } from './main.view.styles';
 
 const MainView: React.FC = () => {
     const navigate = useNavigate();
@@ -21,26 +22,18 @@ const MainView: React.FC = () => {
     }, [getBalance, getDailySurvey]);
 
     return (
-        <Container sx={{ padding: '20px' }}>
+        <Container>
             <Stack spacing={6}>
                 <Stack direction="row" alignItems="center">
                     <div>
                         <strong>Welcome!</strong> Your current
                         <strong> $QUIZ</strong> balance is
                     </div>
-                    <Paper
-                        elevation={4}
-                        sx={{
-                            padding: '5px',
-                            borderRadius: '50px',
-                            minWidth: '120px',
-                            marginLeft: '0.5em',
-                        }}
-                    >
+                    <CustomPill elevation={4}>
                         <Stack alignItems="center">
                             <strong>{balance} $QUIZ</strong>
                         </Stack>
-                    </Paper>
+                    </CustomPill>
                 </Stack>
                 {survey && (
                     <Stack alignItems="center" spacing={4}>
@@ -48,14 +41,9 @@ const MainView: React.FC = () => {
                             Today&apos;s survey is called{' '}
                             <i>&apos;{survey.title}&apos;</i>
                         </h2>
-                        <Box
-                            sx={{
-                                maxWidth: '30%',
-                                maxHeight: '30%',
-                            }}
-                        >
+                        <SurveyImageWrapper>
                             <Image src={survey.image} showLoading />
-                        </Box>
+                        </SurveyImageWrapper>
                         <Button
                             color="secondary"
                             variant="outlined"

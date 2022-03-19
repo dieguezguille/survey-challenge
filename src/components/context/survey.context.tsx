@@ -122,6 +122,7 @@ const SurveyContextProvider: React.FC = ({ children }) => {
             survey,
             getDailySurvey,
             isSurveyStarted,
+            startSurvey,
         }),
         [balance, contract, getBalance, getDailySurvey, isSurveyStarted, survey]
     );
