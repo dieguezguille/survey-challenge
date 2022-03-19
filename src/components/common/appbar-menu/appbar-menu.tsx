@@ -2,13 +2,13 @@ import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
 import WalletConnector from '../wallet-connector/wallet-connector';
+import { ToolbarWrapper } from './appbar-menu.styles';
 
 const AppBarMenu: React.FC = () => (
     <Box sx={{ flexGrow: 1 }}>
         <AppBar position="static">
-            <Container>
+            <ToolbarWrapper sx={{ padding: '0px' }}>
                 <Toolbar>
                     <Typography
                         variant="h6"
@@ -19,7 +19,7 @@ const AppBarMenu: React.FC = () => (
                     </Typography>
                     <WalletConnector />
                 </Toolbar>
-            </Container>
+            </ToolbarWrapper>
         </AppBar>
     </Box>
 );

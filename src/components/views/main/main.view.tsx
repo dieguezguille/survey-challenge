@@ -1,4 +1,4 @@
-import { Box, Button, Paper, Stack } from '@mui/material';
+import { Button, Stack } from '@mui/material';
 import Container from '@mui/material/Container';
 import { useContext, useEffect } from 'react';
 import { SurveyContext } from '../../context/survey.context';
