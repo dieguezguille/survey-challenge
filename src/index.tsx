@@ -8,6 +8,7 @@ import App from './App';
 import { SnackbarProvider } from 'notistack';
 import AppContextProvider from './components/context/app.context';
 import WalletContextProvider from './components/context/wallet.context';
+import QuizContextProvider from './components/context/quiz.context';
 
 ReactDOM.render(
     <React.StrictMode>
@@ -15,10 +16,12 @@ ReactDOM.render(
             <SnackbarProvider maxSnack={5}>
                 <AppContextProvider>
                     <WalletContextProvider>
-                        <BrowserRouter>
-                            <CssBaseline />
-                            <App />
-                        </BrowserRouter>
+                        <QuizContextProvider>
+                            <BrowserRouter>
+                                <CssBaseline />
+                                <App />
+                            </BrowserRouter>
+                        </QuizContextProvider>
                     </WalletContextProvider>
                 </AppContextProvider>
             </SnackbarProvider>
