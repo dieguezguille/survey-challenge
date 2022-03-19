@@ -11,18 +11,18 @@ import WalletContextProvider from './components/context/wallet.context';
 
 ReactDOM.render(
     <React.StrictMode>
-        <AppContextProvider>
-            <WalletContextProvider>
-                <ThemeProvider theme={CustomTheme}>
-                    <SnackbarProvider maxSnack={5}>
+        <ThemeProvider theme={CustomTheme}>
+            <SnackbarProvider maxSnack={5}>
+                <AppContextProvider>
+                    <WalletContextProvider>
                         <BrowserRouter>
                             <CssBaseline />
                             <App />
                         </BrowserRouter>
-                    </SnackbarProvider>
-                </ThemeProvider>
-            </WalletContextProvider>
-        </AppContextProvider>
+                    </WalletContextProvider>
+                </AppContextProvider>
+            </SnackbarProvider>
+        </ThemeProvider>
     </React.StrictMode>,
     document.getElementById('root')
 );
