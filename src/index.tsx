@@ -5,14 +5,17 @@ import { BrowserRouter } from 'react-router-dom';
 import { CssBaseline, ThemeProvider } from '@mui/material';
 import CustomTheme from './theme/custom.theme';
 import App from './App';
+import { SnackbarProvider } from 'notistack';
 
 ReactDOM.render(
     <React.StrictMode>
         <ThemeProvider theme={CustomTheme}>
-            <BrowserRouter>
-                <CssBaseline />
-                <App />
-            </BrowserRouter>
+            <SnackbarProvider maxSnack={5}>
+                <BrowserRouter>
+                    <CssBaseline />
+                    <App />
+                </BrowserRouter>
+            </SnackbarProvider>
         </ThemeProvider>
     </React.StrictMode>,
     document.getElementById('root')
