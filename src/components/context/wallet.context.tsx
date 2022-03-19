@@ -143,6 +143,7 @@ const WalletContextProvider: React.FC = ({ children }) => {
     }, [enqueueSnackbar, isMetamaskError, provider, setIsLoading]);
 
     const connect = useCallback(async () => {
+        setIsLoading(true);
         try {
             if (provider) {
                 checkChain();

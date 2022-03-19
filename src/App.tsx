@@ -1,7 +1,13 @@
+import Loader from './components/common/loader/loader';
 import Routes from './components/routes/routes';
 
 function App() {
-    return <Routes />;
+    return (
+        <>
+            <Loader />
+            <Routes />
+        </>
+    );
 }
 
 export default App;
