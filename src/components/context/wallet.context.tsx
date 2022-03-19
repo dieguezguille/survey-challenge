@@ -8,6 +8,7 @@ import React, {
     useEffect,
     useState,
 } from 'react';
+import useMetamaskUtils from '../../hooks/metamask-utils.hook';
 
 type WalletContextProps = {
     isConnected: boolean;
@@ -18,6 +19,9 @@ type WalletContextProps = {
     setProvider: Dispatch<
         React.SetStateAction<ethers.providers.Web3Provider | undefined>
     >;
+    isInvalidChain: boolean;
+    setIsInvalidChain: Dispatch<SetStateAction<boolean>>;
+    requestChainSwitch: () => Promise<void>;
     connect: () => void;
     disconnect: () => void;
 };
@@ -29,6 +33,9 @@ const defaultValues: WalletContextProps = {
     setAddress: () => {},
     provider: undefined,
     setProvider: () => {},
+    isInvalidChain: false,
+    setIsInvalidChain: () => {},
+    requestChainSwitch: async () => {},
     connect: () => {},
     disconnect: () => {},
 };
@@ -37,6 +44,7 @@ export const WalletContext = createContext(defaultValues);
 
 const WalletContextProvider: React.FC = ({ children }) => {
     const { enqueueSnackbar } = useSnackbar();
+    const { isMetamaskError } = useMetamaskUtils();
     const [isConnected, setIsConnected] = useState<boolean>(
         defaultValues.isConnected
     );
@@ -48,6 +56,10 @@ const WalletContextProvider: React.FC = ({ children }) => {
     const [provider, setProvider] = useState<
         ethers.providers.Web3Provider | undefined
     >(defaultValues.provider);
+
+    const [isInvalidChain, setIsInvalidChain] = useState<boolean>(
+        defaultValues.isInvalidChain
+    );
 
     const disconnect = useCallback(() => {
         setIsConnected(false);
@@ -63,9 +75,42 @@ const WalletContextProvider: React.FC = ({ children }) => {
                 'Unsupported chain detected. Make sure to be connected to Ropsten Network',
                 { variant: 'error' }
             );
+            setIsInvalidChain(true);
             disconnect();
+        } else {
+            setIsInvalidChain(false);
         }
     }, [disconnect, enqueueSnackbar, provider]);
+
+    const requestChainSwitch = useCallback(async () => {
+        try {
+            await provider?.send('wallet_switchEthereumChain', [
+                {
+                    chainId: '0x3',
+                },
+            ]);
+        } catch (error) {
+            if (isMetamaskError(error) && error.code === 4902) {
+                try {
+                    await provider?.send('wallet_addEthereumChain', [
+                        {
+                            chainId: '0x3',
+                            rpcUrl: 'https://ropsten.infura.io/v3/',
+                        },
+                    ]);
+                } catch (addError) {
+                    enqueueSnackbar(
+                        'Unable to add Ropsten Testnet to Metamask',
+                        { variant: 'error' }
+                    );
+                    console.log(addError);
+                }
+            } else {
+                enqueueSnackbar('Operation failed', { variant: 'error' });
+                console.log(error);
+            }
+        }
+    }, [enqueueSnackbar, isMetamaskError, provider]);
 
     const connect = useCallback(async () => {
         if (provider) {
@@ -86,6 +131,9 @@ const WalletContextProvider: React.FC = ({ children }) => {
         setAddress,
         provider,
         setProvider,
+        isInvalidChain,
+        setIsInvalidChain,
+        requestChainSwitch,
         connect,
         disconnect,
     };

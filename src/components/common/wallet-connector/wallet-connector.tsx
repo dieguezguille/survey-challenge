@@ -3,20 +3,34 @@ import { useContext } from 'react';
 import { WalletContext } from '../../context/wallet.context';
 
 const WalletConnector: React.FC = () => {
-    const { isConnected, connect, disconnect, address } =
-        useContext(WalletContext);
+    const {
+        isConnected,
+        connect,
+        disconnect,
+        address,
+        isInvalidChain,
+        requestChainSwitch,
+    } = useContext(WalletContext);
 
-    const handleClick = () => {
+    const handleConnect = () => {
         !isConnected ? connect() : disconnect();
     };
 
-    return (
-        <Button color="inherit" onClick={handleClick}>
+    const handleChainSwitch = () => {
+        requestChainSwitch();
+    };
+
+    return !isInvalidChain ? (
+        <Button color="inherit" onClick={handleConnect}>
             {isConnected
                 ? `${String(address).substring(0, 6)}...${String(
                       address
                   ).substring(38)}`
                 : 'Connect Wallet'}
+        </Button>
+    ) : (
+        <Button color="inherit" onClick={handleChainSwitch}>
+            Switch to Ropsten
         </Button>
     );
 };
