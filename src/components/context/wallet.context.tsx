@@ -49,8 +49,27 @@ const WalletContextProvider: React.FC = ({ children }) => {
         ethers.providers.Web3Provider | undefined
     >(defaultValues.provider);
 
+    const disconnect = useCallback(() => {
+        setIsConnected(false);
+        setAddress(undefined);
+        enqueueSnackbar('Disconnected from Metamask', { variant: 'info' });
+    }, [enqueueSnackbar]);
+
+    const checkChain = useCallback(async () => {
+        const network = await provider?.getNetwork();
+        const chain = network?.chainId;
+        if (chain && chain.toString() !== process.env.REACT_APP_TESTNET_ID) {
+            enqueueSnackbar(
+                'Unsupported chain detected. Make sure to be connected to Ropsten Network',
+                { variant: 'error' }
+            );
+            disconnect();
+        }
+    }, [disconnect, enqueueSnackbar, provider]);
+
     const connect = useCallback(async () => {
         if (provider) {
+            checkChain();
             const result = await provider.send('eth_requestAccounts', []);
             if (result && result.length > 0) {
                 setAddress(result[0]);
@@ -58,13 +77,7 @@ const WalletContextProvider: React.FC = ({ children }) => {
                 enqueueSnackbar('Connected to Metamask', { variant: 'info' });
             }
         }
-    }, [enqueueSnackbar, provider]);
-
-    const disconnect = useCallback(() => {
-        setIsConnected(false);
-        setAddress(undefined);
-        enqueueSnackbar('Disconnected from Metamask', { variant: 'info' });
-    }, [enqueueSnackbar]);
+    }, [checkChain, enqueueSnackbar, provider]);
 
     const contextValue = {
         isConnected,
@@ -93,7 +106,7 @@ const WalletContextProvider: React.FC = ({ children }) => {
                 }
             };
 
-            const handleChainChanged = () => {
+            const handleChainChanged = async () => {
                 window.location.reload();
             };
 
