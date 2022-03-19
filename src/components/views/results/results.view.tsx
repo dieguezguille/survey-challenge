@@ -1,5 +1,11 @@
+import Container from '@mui/material/Container';
+
 const ResultsView: React.FC = () => {
-    return <>Results View</>;
+    return (
+        <Container>
+            <h2>Results.</h2>
+        </Container>
+    );
 };
 
 export default ResultsView;
