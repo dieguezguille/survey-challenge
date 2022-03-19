@@ -8,17 +8,23 @@ import React, {
     useState,
 } from 'react';
 import contractAbi from '../../abis/survey.json';
+import { getSurvey } from '../../adapters/survey.adapter';
+import ISurvey from '../../models/survey.model';
 import { AppContext } from './app.context';
 import { WalletContext } from './wallet.context';
 
 type SurveyContextProps = {
     balance: number;
     getBalance: () => Promise<void>;
+    survey: ISurvey | undefined;
+    getDailySurvey: () => Promise<void>;
 };
 
 const defaultValues: SurveyContextProps = {
     balance: 0,
     getBalance: async () => {},
+    survey: undefined,
+    getDailySurvey: async () => {},
 };
 
 export const SurveyContext = createContext(defaultValues);
@@ -27,10 +33,26 @@ const SurveyContextProvider: React.FC = ({ children }) => {
     const { setIsLoading } = useContext(AppContext);
     const { address, provider } = useContext(WalletContext);
     const { enqueueSnackbar } = useSnackbar();
-    const [balance, setBalance] = useState<number>(defaultValues.balance);
-    const [contract, setContract] = useState<Contract | undefined>();
 
-    const getBalance = async () => {
+    const [balance, setBalance] = useState<number>(defaultValues.balance);
+    const [contract, setContract] = useState<Contract | undefined>(undefined);
+    const [survey, setSurvey] = useState<ISurvey | undefined>(undefined);
+
+    const getDailySurvey = useCallback(async () => {
+        setIsLoading(true);
+        try {
+            const result: ISurvey = await getSurvey();
+            setSurvey(result);
+        } catch (error) {
+            enqueueSnackbar('Failed to get daily survey.', {
+                variant: 'error',
+            });
+        } finally {
+            setIsLoading(false);
+        }
+    }, [enqueueSnackbar, setIsLoading]);
+
+    const getBalance = useCallback(async () => {
         setIsLoading(true);
         try {
             if (contract && address) {
@@ -43,7 +65,7 @@ const SurveyContextProvider: React.FC = ({ children }) => {
         } finally {
             setIsLoading(false);
         }
-    };
+    }, [address, contract, setIsLoading]);
 
     const loadContract = useCallback(async () => {
         setIsLoading(true);
@@ -83,6 +105,8 @@ const SurveyContextProvider: React.FC = ({ children }) => {
         getBalance,
         setBalance,
         contract,
+        survey,
+        getDailySurvey,
     };
 
     return (
