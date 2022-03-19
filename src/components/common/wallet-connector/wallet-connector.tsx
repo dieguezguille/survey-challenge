@@ -1,8 +1,10 @@
 import Button from '@mui/material/Button';
-import useWalletContext from '../../../hooks/use-wallet-context.hook';
+import { useContext } from 'react';
+import { WalletContext } from '../../context/wallet.context';
 
 const WalletConnector: React.FC = () => {
-    const { isConnected, connect, disconnect } = useWalletContext();
+    const { isConnected, connect, disconnect, address } =
+        useContext(WalletContext);
 
     const handleClick = () => {
         !isConnected ? connect() : disconnect();
@@ -10,7 +12,11 @@ const WalletConnector: React.FC = () => {
 
     return (
         <Button color="inherit" onClick={handleClick}>
-            {!isConnected ? 'Connect Wallet' : 'Disconnect Wallet'}
+            {isConnected
+                ? `${String(address).substring(0, 6)}...${String(
+                      address
+                  ).substring(38)}`
+                : 'Connect Wallet'}
         </Button>
     );
 };
