@@ -1,7 +1,13 @@
 import { Outlet } from 'react-router-dom';
+import AppBarMenu from '../common/appbar-menu/appbar-menu';
 
 const ContentLayout: React.FC = () => {
-    return <Outlet />;
+    return (
+        <>
+            <AppBarMenu />
+            <Outlet />
+        </>
+    );
 };
 
 export default ContentLayout;
