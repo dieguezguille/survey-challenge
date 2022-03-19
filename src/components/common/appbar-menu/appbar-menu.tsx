@@ -15,7 +15,7 @@ const AppBarMenu: React.FC = () => (
                         component="div"
                         sx={{ flexGrow: 1 }}
                     >
-                        Quiz Challenge
+                        ❔ Quiz Challenge
                     </Typography>
                     <WalletConnector />
                 </Toolbar>
