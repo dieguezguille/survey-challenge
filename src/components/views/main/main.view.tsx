@@ -12,9 +12,12 @@ const MainView: React.FC = () => {
 
     return (
         <Container>
-            <Stack>
+            <Stack alignItems="center">
                 <h1>Welcome!</h1>
-                <h2>Your current balance is: {balance} $QUIZ</h2>
+                <div>Your current balance is:</div>
+                <h4>
+                    <b>{balance} $QUIZ</b>
+                </h4>
             </Stack>
         </Container>
     );
