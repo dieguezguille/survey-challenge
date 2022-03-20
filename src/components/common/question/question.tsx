@@ -4,7 +4,6 @@ import Image from 'mui-image';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import { SurveyImageWrapper } from '../../styled/survey-image-wrapper/survey-image-wrapper';
-import Container from '@mui/material/Container';
 
 type QuestionProps = {
     question: ISurveyQuestion;
