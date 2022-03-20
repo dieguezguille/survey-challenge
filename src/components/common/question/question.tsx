@@ -25,7 +25,7 @@ const Question: React.FC<QuestionProps> = ({ question, onNextQuestion }) => {
     }, []);
 
     const handleOptionClick = () => {
-        if (intervalId) clearInterval(intervalId);
+        window.clearInterval(intervalId);
         onNextQuestion();
     };
 
@@ -46,9 +46,10 @@ const Question: React.FC<QuestionProps> = ({ question, onNextQuestion }) => {
         }, 1000);
         setIntervalId(timer);
         return () => {
+            console.log('unmounting and clearing');
             window.clearInterval(timer);
         };
-    }, [handleTimeout, question.lifetimeSeconds]);
+    }, [handleTimeout, question]);
 
     return (
         <Stack spacing={6} padding="3em">

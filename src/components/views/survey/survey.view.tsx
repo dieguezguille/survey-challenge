@@ -4,10 +4,18 @@ import { SurveyContext } from '../../context/survey.context';
 
 import { useCallback } from 'react';
 import Question from '../../common/question/question';
+import { useNavigate } from 'react-router-dom';
+import { RoutesEnum } from '../../../enums/routes.enum';
 
 const SurveyView: React.FC = () => {
-    const { startSurvey, isSurveyStarted, currentQuestion, getNextQuestion } =
-        useContext(SurveyContext);
+    const navigate = useNavigate();
+    const {
+        startSurvey,
+        isSurveyStarted,
+        isSurveyFinished,
+        currentQuestion,
+        getNextQuestion,
+    } = useContext(SurveyContext);
 
     const handleNextQuestion = useCallback(() => {
         getNextQuestion();
@@ -22,6 +30,10 @@ const SurveyView: React.FC = () => {
             handleNextQuestion();
         }
     }, [getNextQuestion, handleNextQuestion, isSurveyStarted]);
+
+    useEffect(() => {
+        if (isSurveyFinished) navigate(RoutesEnum.RESULTS, { replace: true });
+    });
 
     return (
         <Container>

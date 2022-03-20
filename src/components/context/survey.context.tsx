@@ -20,6 +20,7 @@ type SurveyContextType = {
     survey: ISurvey | undefined;
     getDailySurvey: () => Promise<void>;
     isSurveyStarted: boolean;
+    isSurveyFinished: boolean;
     startSurvey: () => void;
     currentQuestion: ISurveyQuestion | undefined;
     getNextQuestion: () => void;
@@ -31,6 +32,7 @@ const defaultValues: SurveyContextType = {
     survey: undefined,
     getDailySurvey: async () => {},
     isSurveyStarted: false,
+    isSurveyFinished: false,
     startSurvey: () => {},
     currentQuestion: undefined,
     getNextQuestion: () => {},
@@ -49,6 +51,7 @@ const SurveyContextProvider: React.FC = ({ children }) => {
     const [isSurveyStarted, setIsSurveyStarted] = useState<boolean>(
         defaultValues.isSurveyStarted
     );
+    const [isSurveyFinished, setIsSurveyFinished] = useState<boolean>(false);
     const [currentQuestion, setCurrentQuestion] = useState<
         ISurveyQuestion | undefined
     >(undefined);
@@ -57,14 +60,18 @@ const SurveyContextProvider: React.FC = ({ children }) => {
         setIsLoading(true);
         try {
             if (survey) {
-                setCurrentQuestion(
-                    (prevQuestion) =>
-                        survey.questions[
-                            prevQuestion
-                                ? survey.questions.indexOf(prevQuestion) + 1
-                                : 0
-                        ]
-                );
+                setCurrentQuestion((previousQuestion) => {
+                    if (!previousQuestion) return survey.questions[0];
+                    const prevIndex =
+                        survey.questions.indexOf(previousQuestion);
+                    const index =
+                        prevIndex + 1 > 0 &&
+                        prevIndex + 1 < survey.questions.length
+                            ? prevIndex + 1
+                            : 0;
+                    setIsSurveyFinished(index === 0);
+                    return survey.questions[index];
+                });
             }
         } catch (error) {
             enqueueSnackbar('Failed to get next question', {
@@ -150,18 +157,20 @@ const SurveyContextProvider: React.FC = ({ children }) => {
             survey,
             getDailySurvey,
             isSurveyStarted,
+            isSurveyFinished,
             startSurvey,
             currentQuestion,
             getNextQuestion,
         }),
         [
             balance,
-            contract,
-            currentQuestion,
             getBalance,
+            contract,
+            survey,
             getDailySurvey,
             isSurveyStarted,
-            survey,
+            isSurveyFinished,
+            currentQuestion,
             getNextQuestion,
         ]
     );
