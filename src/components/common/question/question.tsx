@@ -5,7 +5,7 @@ import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import { SurveyImageWrapper } from '../../styled/survey-image-wrapper/survey-image-wrapper';
 import { LinearProgress, Typography } from '@mui/material';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 type QuestionProps = {
     question: ISurveyQuestion;
@@ -20,10 +20,6 @@ const Question: React.FC<QuestionProps> = ({ question, onNextQuestion }) => {
     const [progress, setProgress] = useState<number>(0);
     const [intervalId, setIntervalId] = useState<number>();
 
-    const handleTimeout = useCallback(() => {
-        // onNextQuestion();
-    }, []);
-
     const handleOptionClick = () => {
         window.clearInterval(intervalId);
         onNextQuestion();
@@ -34,7 +30,6 @@ const Question: React.FC<QuestionProps> = ({ question, onNextQuestion }) => {
             setProgress((oldProgress) => {
                 if (oldProgress === 100) {
                     window.clearInterval(timer);
-                    handleTimeout();
                     return 100;
                 }
                 const diff = 100 / question.lifetimeSeconds;
@@ -46,10 +41,16 @@ const Question: React.FC<QuestionProps> = ({ question, onNextQuestion }) => {
         }, 1000);
         setIntervalId(timer);
         return () => {
-            console.log('unmounting and clearing');
             window.clearInterval(timer);
         };
-    }, [handleTimeout, question]);
+    }, [question]);
+
+    useEffect(() => {
+        if (question) {
+            setRemainingTime(question.lifetimeSeconds);
+            setProgress(0);
+        }
+    }, [intervalId, question]);
 
     return (
         <Stack spacing={6} padding="3em">
