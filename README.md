@@ -1,1 +1,1 @@
-# Quiz Web3 Challenge
+# Survey Challenge

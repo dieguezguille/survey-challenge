@@ -26,6 +26,8 @@ module.exports = {
     },
     plugins: ['react', '@typescript-eslint', 'prettier', 'react-hooks'],
     rules: {
+        'react/prop-types': 'off',
+        '@typescript-eslint/no-empty-function': 'off',
         'react-hooks/rules-of-hooks': 'error',
         'react-hooks/exhaustive-deps': 'warn',
         'prettier/prettier': [
@@ -34,7 +36,6 @@ module.exports = {
                 endOfLine: 'auto',
             },
         ],
-        indent: ['error', 4],
         quotes: ['error', 'single'],
         semi: ['error', 'always'],
     },
