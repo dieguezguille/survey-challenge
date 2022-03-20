@@ -43,7 +43,7 @@ const Question: React.FC<QuestionProps> = ({ question, onNextQuestion }) => {
         return () => {
             window.clearInterval(timer);
         };
-    }, [question]);
+    }, [onNextQuestion, question]);
 
     useEffect(() => {
         if (question) {
@@ -51,6 +51,12 @@ const Question: React.FC<QuestionProps> = ({ question, onNextQuestion }) => {
             setProgress(0);
         }
     }, [intervalId, question]);
+
+    useEffect(() => {
+        if (remainingTime === 0) {
+            onNextQuestion();
+        }
+    }, [onNextQuestion, remainingTime]);
 
     return (
         <Stack spacing={6} padding="3em">
