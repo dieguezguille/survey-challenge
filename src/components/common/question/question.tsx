@@ -7,9 +7,16 @@ import { SurveyImageWrapper } from '../../styled/survey-image-wrapper/survey-ima
 
 type QuestionProps = {
     question: ISurveyQuestion;
+    onNextQuestion: () => void;
 };
 
-const Question: React.FC<QuestionProps> = ({ question }) => {
+const Question: React.FC<QuestionProps> = ({ question, onNextQuestion }) => {
+    const handleOptionClick = () => {
+        // TODO: Save answer
+        // Request next question
+        onNextQuestion();
+    };
+
     return (
         <Stack spacing={6}>
             <Stack alignItems="center" spacing={4}>
@@ -29,22 +36,18 @@ const Question: React.FC<QuestionProps> = ({ question }) => {
                     container
                 >
                     {question.options.map((option, index) => (
-                        <Grid item xs={12} sm={12} md={3} key={index}>
+                        <Grid item xs={12} sm={6} md={3} key={index}>
                             <Button
                                 fullWidth
                                 variant="outlined"
                                 color="secondary"
+                                onClick={handleOptionClick}
                             >
                                 {option.text}
                             </Button>
                         </Grid>
                     ))}
                 </Grid>
-            </Stack>
-            <Stack alignItems="center">
-                <Button variant="outlined" color="secondary" onClick={() => {}}>
-                    Next Question
-                </Button>
             </Stack>
         </Stack>
     );

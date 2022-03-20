@@ -26,7 +26,10 @@ const SurveyView: React.FC = () => {
     return (
         <Container>
             {currentQuestion && isSurveyStarted && (
-                <Question question={currentQuestion} />
+                <Question
+                    question={currentQuestion}
+                    onNextQuestion={handleNextQuestion}
+                />
             )}
         </Container>
     );
