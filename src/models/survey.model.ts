@@ -3,9 +3,9 @@ export interface ISurveyQuestionOption {
 }
 
 export interface ISurveyQuestion {
-    test: string;
+    text: string;
     image: string;
-    lifeTimeSeconds: number;
+    lifetimeSeconds: number;
     options: Array<ISurveyQuestionOption>;
 }
 

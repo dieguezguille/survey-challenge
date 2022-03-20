@@ -5,7 +5,8 @@ import { SurveyContext } from '../../context/survey.context';
 import Image from 'mui-image';
 import { useNavigate } from 'react-router-dom';
 import { RoutesEnum } from '../../../enums/routes.enum';
-import { CustomPill, SurveyImageWrapper } from './main.view.styles';
+import { CustomPill } from './main.view.styles';
+import { SurveyImageWrapper } from '../../styled/survey-image-wrapper/survey-image-wrapper';
 
 const MainView: React.FC = () => {
     const navigate = useNavigate();

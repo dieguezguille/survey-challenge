@@ -20,6 +20,9 @@ type SurveyContextType = {
     survey: ISurvey | undefined;
     getDailySurvey: () => Promise<void>;
     isSurveyStarted: boolean;
+    startSurvey: () => void;
+    currentQuestion: ISurveyQuestion | undefined;
+    getNextQuestion: () => void;
 };
 
 const defaultValues: SurveyContextType = {
@@ -28,6 +31,9 @@ const defaultValues: SurveyContextType = {
     survey: undefined,
     getDailySurvey: async () => {},
     isSurveyStarted: false,
+    startSurvey: () => {},
+    currentQuestion: undefined,
+    getNextQuestion: () => {},
 };
 
 export const SurveyContext = createContext(defaultValues);
@@ -46,6 +52,28 @@ const SurveyContextProvider: React.FC = ({ children }) => {
     const [currentQuestion, setCurrentQuestion] = useState<
         ISurveyQuestion | undefined
     >(undefined);
+
+    const getNextQuestion = useCallback(() => {
+        setIsLoading(true);
+        try {
+            if (survey) {
+                setCurrentQuestion(
+                    (prevQuestion) =>
+                        survey.questions[
+                            prevQuestion
+                                ? survey.questions.indexOf(prevQuestion) + 1
+                                : 0
+                        ]
+                );
+            }
+        } catch (error) {
+            enqueueSnackbar('Failed to get next question', {
+                variant: 'error',
+            });
+        } finally {
+            setIsLoading(false);
+        }
+    }, [enqueueSnackbar, setIsLoading, survey]);
 
     const getDailySurvey = useCallback(async () => {
         setIsLoading(true);
@@ -86,7 +114,7 @@ const SurveyContextProvider: React.FC = ({ children }) => {
             const contractAddress = process.env.REACT_APP_CONTRACT_ADDRESS;
             if (contractAddress) {
                 setContract(
-                    new ethers.Contract(
+                    await new ethers.Contract(
                         contractAddress,
                         contractAbi,
                         provider?.getSigner()
@@ -123,8 +151,19 @@ const SurveyContextProvider: React.FC = ({ children }) => {
             getDailySurvey,
             isSurveyStarted,
             startSurvey,
+            currentQuestion,
+            getNextQuestion,
         }),
-        [balance, contract, getBalance, getDailySurvey, isSurveyStarted, survey]
+        [
+            balance,
+            contract,
+            currentQuestion,
+            getBalance,
+            getDailySurvey,
+            isSurveyStarted,
+            survey,
+            getNextQuestion,
+        ]
     );
 
     return (
