@@ -7,7 +7,7 @@ import ErrorView from '../views/error/error.view';
 import ForbiddenView from '../views/forbidden/forbidden.view';
 import MainView from '../views/main/main.view';
 import SurveyView from '../views/survey/survey.view';
-import ResultsView from '../views/results/results.view';
+import OverviewView from '../views/overview/overview.view';
 
 const DefaultRoutes = [
     {
@@ -28,7 +28,7 @@ const DefaultRoutes = [
             },
             {
                 path: RoutesEnum.RESULTS,
-                element: <ResultsView />,
+                element: <OverviewView />,
             },
             {
                 path: RoutesEnum.NO_MATCH,
