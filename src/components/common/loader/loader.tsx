@@ -1,17 +1,14 @@
-import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import { useContext } from 'react';
 import { AppContext } from '../../context/app.context';
+import { StyledBackdrop } from './loader.styles';
 
 const Loader: React.FC = () => {
     const { isLoading } = useContext(AppContext);
     return (
-        <Backdrop
-            sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-            open={isLoading}
-        >
-            <CircularProgress color="inherit" />
-        </Backdrop>
+        <StyledBackdrop open={isLoading}>
+            <CircularProgress />
+        </StyledBackdrop>
     );
 };
 
