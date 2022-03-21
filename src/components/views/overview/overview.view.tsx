@@ -5,7 +5,7 @@ import { useContext } from 'react';
 import { SurveyContext } from '../../context/survey.context';
 
 const OverviewView: React.FC = () => {
-    const { survey } = useContext(SurveyContext);
+    const { survey, answers } = useContext(SurveyContext);
     return (
         <Container>
             <Stack alignItems="center">
@@ -22,9 +22,10 @@ const OverviewView: React.FC = () => {
                             </Typography>
                             <Typography variant="body1">
                                 Answer:{' '}
-                                {/* {question.answerId && question.answerId !== 0
-                                    ? question.options[question.answerId]
-                                    : 'No answer'} */}
+                                {answers
+                                    ? question.options[answers.answerIds[index]]
+                                          .text
+                                    : ''}
                             </Typography>
                         </Stack>
                     </Paper>

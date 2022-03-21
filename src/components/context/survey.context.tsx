@@ -10,7 +10,11 @@ import React, {
 } from 'react';
 import contractAbi from '../../abis/survey.json';
 import { getSurvey } from '../../adapters/survey.adapter';
-import { ISurvey, ISurveyQuestion } from '../../models/survey.model';
+import {
+    ISurvey,
+    ISurveyAnswers,
+    ISurveyQuestion,
+} from '../../models/survey.model';
 import { AppContext } from './app.context';
 import { WalletContext } from './wallet.context';
 
@@ -24,6 +28,8 @@ type SurveyContextType = {
     startSurvey: () => void;
     currentQuestion: ISurveyQuestion | undefined;
     getNextQuestion: () => void;
+    answers: ISurveyAnswers | undefined;
+    saveAnswer: (surveyId: number, answerId: number) => void;
 };
 
 const defaultValues: SurveyContextType = {
@@ -36,6 +42,8 @@ const defaultValues: SurveyContextType = {
     startSurvey: () => {},
     currentQuestion: undefined,
     getNextQuestion: () => {},
+    answers: undefined,
+    saveAnswer: () => {},
 };
 
 export const SurveyContext = createContext(defaultValues);
@@ -55,6 +63,21 @@ const SurveyContextProvider: React.FC = ({ children }) => {
     const [currentQuestion, setCurrentQuestion] = useState<
         ISurveyQuestion | undefined
     >(undefined);
+    const [answers, setAnswers] = useState<ISurveyAnswers | undefined>(
+        undefined
+    );
+
+    const saveAnswer = useCallback((surveyId: number, answerId: number) => {
+        setAnswers((previousState) => {
+            if (!previousState) {
+                return { surveyId: surveyId, answerIds: [answerId] };
+            }
+            return {
+                ...previousState,
+                answerIds: [...previousState.answerIds, answerId],
+            };
+        });
+    }, []);
 
     const getNextQuestion = useCallback(() => {
         setIsLoading(true);
@@ -148,7 +171,11 @@ const SurveyContextProvider: React.FC = ({ children }) => {
         }
     }, [contract, loadContract]);
 
-    const contextValue = useMemo(
+    useEffect(() => {
+        console.log(answers);
+    }, [answers]);
+
+    const contextValue: SurveyContextType = useMemo(
         () => ({
             balance,
             getBalance,
@@ -161,6 +188,8 @@ const SurveyContextProvider: React.FC = ({ children }) => {
             startSurvey,
             currentQuestion,
             getNextQuestion,
+            saveAnswer,
+            answers,
         }),
         [
             balance,
@@ -172,6 +201,8 @@ const SurveyContextProvider: React.FC = ({ children }) => {
             isSurveyFinished,
             currentQuestion,
             getNextQuestion,
+            saveAnswer,
+            answers,
         ]
     );
 

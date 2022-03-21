@@ -5,7 +5,8 @@ import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import { SurveyImageWrapper } from '../../styled/survey-image-wrapper/survey-image-wrapper';
 import { LinearProgress, Typography } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
+import { SurveyContext } from '../../context/survey.context';
 
 type QuestionProps = {
     question: ISurveyQuestion;
@@ -13,6 +14,7 @@ type QuestionProps = {
 };
 
 const Question: React.FC<QuestionProps> = ({ question, onNextQuestion }) => {
+    const { saveAnswer } = useContext(SurveyContext);
     const [remainingTime, setRemainingTime] = useState<number>(
         question.lifetimeSeconds
     );
@@ -20,10 +22,14 @@ const Question: React.FC<QuestionProps> = ({ question, onNextQuestion }) => {
     const [progress, setProgress] = useState<number>(0);
     const [intervalId, setIntervalId] = useState<number>();
 
-    const handleOptionClick = () => {
-        window.clearInterval(intervalId);
-        onNextQuestion();
-    };
+    const handleOptionClick = useCallback(
+        (answerId: number) => {
+            window.clearInterval(intervalId);
+            saveAnswer(1, answerId);
+            onNextQuestion();
+        },
+        [intervalId, onNextQuestion, saveAnswer]
+    );
 
     useEffect(() => {
         const timer = window.setInterval(() => {
@@ -54,9 +60,9 @@ const Question: React.FC<QuestionProps> = ({ question, onNextQuestion }) => {
 
     useEffect(() => {
         if (remainingTime === 0) {
-            onNextQuestion();
+            handleOptionClick(-1);
         }
-    }, [onNextQuestion, remainingTime]);
+    }, [handleOptionClick, remainingTime]);
 
     return (
         <Stack spacing={6} padding="3em">
@@ -91,7 +97,7 @@ const Question: React.FC<QuestionProps> = ({ question, onNextQuestion }) => {
                                 fullWidth
                                 variant="outlined"
                                 color="secondary"
-                                onClick={handleOptionClick}
+                                onClick={() => handleOptionClick(index)}
                             >
                                 {option.text}
                             </Button>
