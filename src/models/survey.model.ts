@@ -14,3 +14,8 @@ export interface ISurvey {
     image: string;
     questions: Array<ISurveyQuestion>;
 }
+
+export interface ISurveyAnswers {
+    surveyId: number;
+    answerIds: Array<number>;
+}

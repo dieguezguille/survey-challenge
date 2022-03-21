@@ -126,12 +126,12 @@ const WalletContextProvider: React.FC = ({ children }) => {
                             rpcUrl: 'https://ropsten.infura.io/v3/',
                         },
                     ]);
-                } catch (addError) {
+                } catch (error) {
                     enqueueSnackbar(
                         'Unable to add Ropsten Testnet to Metamask',
                         { variant: 'error' }
                     );
-                    console.log(addError);
+                    console.log(error);
                 }
             } else {
                 enqueueSnackbar('Operation failed', { variant: 'error' });

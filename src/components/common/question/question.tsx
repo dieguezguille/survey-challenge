@@ -5,7 +5,8 @@ import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import { SurveyImageWrapper } from '../../styled/survey-image-wrapper/survey-image-wrapper';
 import { LinearProgress, Typography } from '@mui/material';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
+import { SurveyContext } from '../../context/survey.context';
 
 type QuestionProps = {
     question: ISurveyQuestion;
@@ -13,6 +14,7 @@ type QuestionProps = {
 };
 
 const Question: React.FC<QuestionProps> = ({ question, onNextQuestion }) => {
+    const { saveAnswer } = useContext(SurveyContext);
     const [remainingTime, setRemainingTime] = useState<number>(
         question.lifetimeSeconds
     );
@@ -20,21 +22,20 @@ const Question: React.FC<QuestionProps> = ({ question, onNextQuestion }) => {
     const [progress, setProgress] = useState<number>(0);
     const [intervalId, setIntervalId] = useState<number>();
 
-    const handleTimeout = useCallback(() => {
-        // onNextQuestion();
-    }, []);
-
-    const handleOptionClick = () => {
-        if (intervalId) clearInterval(intervalId);
-        onNextQuestion();
-    };
+    const handleOptionClick = useCallback(
+        (answerId: number) => {
+            window.clearInterval(intervalId);
+            saveAnswer(1, answerId);
+            onNextQuestion();
+        },
+        [intervalId, onNextQuestion, saveAnswer]
+    );
 
     useEffect(() => {
         const timer = window.setInterval(() => {
             setProgress((oldProgress) => {
                 if (oldProgress === 100) {
                     window.clearInterval(timer);
-                    handleTimeout();
                     return 100;
                 }
                 const diff = 100 / question.lifetimeSeconds;
@@ -48,7 +49,20 @@ const Question: React.FC<QuestionProps> = ({ question, onNextQuestion }) => {
         return () => {
             window.clearInterval(timer);
         };
-    }, [handleTimeout, question.lifetimeSeconds]);
+    }, [onNextQuestion, question]);
+
+    useEffect(() => {
+        if (question) {
+            setRemainingTime(question.lifetimeSeconds);
+            setProgress(0);
+        }
+    }, [intervalId, question]);
+
+    useEffect(() => {
+        if (remainingTime === 0) {
+            handleOptionClick(-1);
+        }
+    }, [handleOptionClick, remainingTime]);
 
     return (
         <Stack spacing={6} padding="3em">
@@ -83,7 +97,7 @@ const Question: React.FC<QuestionProps> = ({ question, onNextQuestion }) => {
                                 fullWidth
                                 variant="outlined"
                                 color="secondary"
-                                onClick={handleOptionClick}
+                                onClick={() => handleOptionClick(index)}
                             >
                                 {option.text}
                             </Button>

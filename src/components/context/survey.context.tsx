@@ -10,30 +10,40 @@ import React, {
 } from 'react';
 import contractAbi from '../../abis/survey.json';
 import { getSurvey } from '../../adapters/survey.adapter';
-import { ISurvey, ISurveyQuestion } from '../../models/survey.model';
+import {
+    ISurvey,
+    ISurveyAnswers,
+    ISurveyQuestion,
+} from '../../models/survey.model';
 import { AppContext } from './app.context';
 import { WalletContext } from './wallet.context';
 
 type SurveyContextType = {
     balance: number;
-    getBalance: () => Promise<void>;
     survey: ISurvey | undefined;
     getDailySurvey: () => Promise<void>;
     isSurveyStarted: boolean;
+    isSurveyFinished: boolean;
     startSurvey: () => void;
     currentQuestion: ISurveyQuestion | undefined;
     getNextQuestion: () => void;
+    answers: ISurveyAnswers | undefined;
+    saveAnswer: (surveyId: number, answerId: number) => void;
+    submitSurvey: () => void;
 };
 
 const defaultValues: SurveyContextType = {
     balance: 0,
-    getBalance: async () => {},
     survey: undefined,
     getDailySurvey: async () => {},
     isSurveyStarted: false,
+    isSurveyFinished: false,
     startSurvey: () => {},
     currentQuestion: undefined,
     getNextQuestion: () => {},
+    answers: undefined,
+    saveAnswer: () => {},
+    submitSurvey: () => {},
 };
 
 export const SurveyContext = createContext(defaultValues);
@@ -49,25 +59,70 @@ const SurveyContextProvider: React.FC = ({ children }) => {
     const [isSurveyStarted, setIsSurveyStarted] = useState<boolean>(
         defaultValues.isSurveyStarted
     );
+    const [isSurveyFinished, setIsSurveyFinished] = useState<boolean>(false);
     const [currentQuestion, setCurrentQuestion] = useState<
         ISurveyQuestion | undefined
     >(undefined);
+    const [answers, setAnswers] = useState<ISurveyAnswers | undefined>(
+        undefined
+    );
+
+    const submitSurvey = useCallback(async () => {
+        setIsLoading(true);
+        try {
+            if (contract && answers) {
+                const result = await contract.submit(
+                    answers.surveyId,
+                    answers.answerIds
+                );
+                if (result) {
+                    console.log(result);
+                    enqueueSnackbar('Answers submitted.', {
+                        variant: 'success',
+                    });
+                }
+            }
+        } catch (error) {
+            enqueueSnackbar('Error submitting survey.', {
+                variant: 'error',
+            });
+            console.log(error);
+        } finally {
+            setIsLoading(false);
+        }
+    }, [answers, contract, enqueueSnackbar, setIsLoading]);
+
+    const saveAnswer = useCallback((surveyId: number, answerId: number) => {
+        setAnswers((previousState) => {
+            if (!previousState) {
+                return { surveyId: surveyId, answerIds: [answerId] };
+            }
+            return {
+                ...previousState,
+                answerIds: [...previousState.answerIds, answerId],
+            };
+        });
+    }, []);
 
     const getNextQuestion = useCallback(() => {
         setIsLoading(true);
         try {
             if (survey) {
-                setCurrentQuestion(
-                    (prevQuestion) =>
-                        survey.questions[
-                            prevQuestion
-                                ? survey.questions.indexOf(prevQuestion) + 1
-                                : 0
-                        ]
-                );
+                setCurrentQuestion((previousQuestion) => {
+                    if (!previousQuestion) return survey.questions[0];
+                    const prevIndex =
+                        survey.questions.indexOf(previousQuestion);
+                    const index =
+                        prevIndex + 1 > 0 &&
+                        prevIndex + 1 < survey.questions.length
+                            ? prevIndex + 1
+                            : 0;
+                    setIsSurveyFinished(index === 0);
+                    return survey.questions[index];
+                });
             }
         } catch (error) {
-            enqueueSnackbar('Failed to get next question', {
+            enqueueSnackbar('Failed to get next question.', {
                 variant: 'error',
             });
         } finally {
@@ -102,11 +157,14 @@ const SurveyContextProvider: React.FC = ({ children }) => {
                 setBalance(parseFloat(newBalance));
             }
         } catch (error) {
+            enqueueSnackbar('Error getting token balance.', {
+                variant: 'error',
+            });
             console.log(error);
         } finally {
             setIsLoading(false);
         }
-    }, [address, contract, setIsLoading]);
+    }, [address, contract, enqueueSnackbar, setIsLoading]);
 
     const loadContract = useCallback(async () => {
         setIsLoading(true);
@@ -138,31 +196,39 @@ const SurveyContextProvider: React.FC = ({ children }) => {
     useEffect(() => {
         if (!contract) {
             loadContract();
+        } else {
+            getBalance();
         }
-    }, [contract, loadContract]);
+    }, [contract, getBalance, loadContract]);
 
-    const contextValue = useMemo(
+    const contextValue: SurveyContextType = useMemo(
         () => ({
             balance,
-            getBalance,
             setBalance,
             contract,
             survey,
             getDailySurvey,
             isSurveyStarted,
+            isSurveyFinished,
             startSurvey,
             currentQuestion,
             getNextQuestion,
+            saveAnswer,
+            answers,
+            submitSurvey,
         }),
         [
             balance,
             contract,
-            currentQuestion,
-            getBalance,
+            survey,
             getDailySurvey,
             isSurveyStarted,
-            survey,
+            isSurveyFinished,
+            currentQuestion,
             getNextQuestion,
+            saveAnswer,
+            answers,
+            submitSurvey,
         ]
     );
 
