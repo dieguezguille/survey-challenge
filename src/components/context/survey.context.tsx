@@ -1,4 +1,4 @@
-import { Contract, ethers } from 'ethers';
+import { Contract, ContractTransaction, ethers } from 'ethers';
 import { useSnackbar } from 'notistack';
 import React, {
     createContext,
@@ -71,21 +71,25 @@ const SurveyContextProvider: React.FC = ({ children }) => {
         setIsLoading(true);
         try {
             if (contract && answers) {
-                const result = await contract.submit(
+                const tx: ContractTransaction = await contract.submit(
                     answers.surveyId,
                     answers.answerIds
                 );
-                if (result) {
-                    console.log(result);
+                if (tx) {
+                    console.log(tx);
+                    await tx.wait();
                     enqueueSnackbar('Answers submitted.', {
                         variant: 'success',
                     });
                 }
             }
         } catch (error) {
-            enqueueSnackbar('Error submitting survey.', {
-                variant: 'error',
-            });
+            enqueueSnackbar(
+                'Error submitting survey. See console for details.',
+                {
+                    variant: 'error',
+                }
+            );
             console.log(error);
         } finally {
             setIsLoading(false);
