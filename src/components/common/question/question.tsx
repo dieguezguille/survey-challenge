@@ -60,7 +60,7 @@ const Question: React.FC<QuestionProps> = ({ question, onNextQuestion }) => {
 
     useEffect(() => {
         if (remainingTime === 0) {
-            handleOptionClick(-1);
+            handleOptionClick(0);
         }
     }, [handleOptionClick, remainingTime]);
 
@@ -97,7 +97,7 @@ const Question: React.FC<QuestionProps> = ({ question, onNextQuestion }) => {
                                 fullWidth
                                 variant="outlined"
                                 color="secondary"
-                                onClick={() => handleOptionClick(index)}
+                                onClick={() => handleOptionClick(index + 1)}
                             >
                                 {option.text}
                             </Button>
