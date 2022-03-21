@@ -1,7 +1,7 @@
 import { styled } from '@mui/material';
-import Stack from '@mui/material/Stack';
-import LinearProgress from '@mui/material/LinearProgress';
 import Grid from '@mui/material/Grid';
+import LinearProgress from '@mui/material/LinearProgress';
+import Stack from '@mui/material/Stack';
 
 export const QuestionWrapper = styled(Stack)({
     padding: '3em',

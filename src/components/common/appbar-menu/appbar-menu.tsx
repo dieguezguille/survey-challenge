@@ -1,4 +1,5 @@
 import Toolbar from '@mui/material/Toolbar';
+
 import WalletConnector from '../wallet-connector/wallet-connector';
 import {
     AppBarTitle,

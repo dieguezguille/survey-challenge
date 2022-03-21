@@ -1,7 +1,8 @@
 import { ChangeCircle } from '@mui/icons-material';
-import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
+import Stack from '@mui/material/Stack';
 import { useContext } from 'react';
+
 import { WalletContext } from '../../context/wallet.context';
 import OnlineIndicator from '../online-indicator/online-indicator';
 

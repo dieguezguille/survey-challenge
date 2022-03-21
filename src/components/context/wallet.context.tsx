@@ -9,6 +9,7 @@ import React, {
     useEffect,
     useState,
 } from 'react';
+
 import useMetamaskUtils from '../../hooks/metamask-utils.hook';
 import { AppContext } from './app.context';
 

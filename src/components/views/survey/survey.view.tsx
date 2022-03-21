@@ -1,11 +1,11 @@
 import Container from '@mui/material/Container';
 import { useContext, useEffect } from 'react';
-import { SurveyContext } from '../../context/survey.context';
-
 import { useCallback } from 'react';
-import Question from '../../common/question/question';
 import { useNavigate } from 'react-router-dom';
+
 import { RoutesEnum } from '../../../enums/routes.enum';
+import Question from '../../common/question/question';
+import { SurveyContext } from '../../context/survey.context';
 
 const SurveyView: React.FC = () => {
     const navigate = useNavigate();

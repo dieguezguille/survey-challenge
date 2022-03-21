@@ -1,4 +1,5 @@
 import axios from 'axios';
+
 import { ISurvey } from '../models/survey.model';
 
 export const getSurvey = async () => {

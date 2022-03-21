@@ -1,18 +1,19 @@
-import Stack from '@mui/material/Stack';
-import { ISurveyQuestion } from '../../../models/survey.model';
-import Image from 'mui-image';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
+import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import Image from 'mui-image';
 import { useCallback, useContext, useEffect, useState } from 'react';
+
+import { ISurveyQuestion } from '../../../models/survey.model';
 import { SurveyContext } from '../../context/survey.context';
+import { CenteredStack } from '../../styled/centered-stack/centered-stack';
+import { SurveyImageWrapper } from '../../styled/survey-image-wrapper/survey-image-wrapper';
 import {
     QuestionProgress,
     QuestionProgressWrapper,
     QuestionWrapper,
 } from './question.styles';
-import { CenteredStack } from '../../styled/centered-stack/centered-stack';
-import { SurveyImageWrapper } from '../../styled/survey-image-wrapper/survey-image-wrapper';
 
 type QuestionProps = {
     question: ISurveyQuestion;

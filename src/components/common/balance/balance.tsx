@@ -1,7 +1,8 @@
 import Stack from '@mui/material/Stack';
+import { useContext } from 'react';
+
 import { SurveyContext } from '../../context/survey.context';
 import { CustomPill } from './balance.styles';
-import { useContext } from 'react';
 
 type BalanceProps = {
     currencyName: string;
