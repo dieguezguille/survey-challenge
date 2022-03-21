@@ -15,7 +15,7 @@ const OverviewView: React.FC = () => {
     return (
         <Container>
             <Stack alignItems="center" spacing={4}>
-                <Balance />
+                <Balance currencyName="QUIZ" />
                 <h2>
                     Overview: <i>&apos;{survey?.title}&apos;</i>
                 </h2>

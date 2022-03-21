@@ -23,7 +23,7 @@ const MainView: React.FC = () => {
     return (
         <Container>
             <Stack spacing={6}>
-                <Balance />
+                <Balance currencyName="QUIZ" />
                 {survey && (
                     <Stack alignItems="center" spacing={4}>
                         <h2>
