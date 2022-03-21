@@ -1,4 +1,4 @@
-import { Typography } from '@mui/material';
+import { Paper, Typography } from '@mui/material';
 import Container from '@mui/material/Container';
 import Stack from '@mui/material/Stack';
 import { useContext } from 'react';
@@ -8,22 +8,26 @@ const OverviewView: React.FC = () => {
     const { survey } = useContext(SurveyContext);
     return (
         <Container>
-            <h2>Overview</h2>
             <Stack alignItems="center">
                 <h2>
-                    <i>&apos;{survey?.title}&apos;</i>
+                    Overview: <i>&apos;{survey?.title}&apos;</i>
                 </h2>
             </Stack>
-            <Stack>
+            <Stack spacing={2}>
                 {survey?.questions.map((question, index) => (
-                    <Stack key={index}>
-                        <Typography>{question.text}</Typography>
-                        {/* <ul>
-                            {question.answers.map((answer, index) => (
-                                <li key={index}>{answer}</li>
-                            ))}
-                        </ul> */}
-                    </Stack>
+                    <Paper key={index} sx={{ padding: '15px' }}>
+                        <Stack spacing={1}>
+                            <Typography variant="h6">
+                                Question: {question.text}
+                            </Typography>
+                            <Typography variant="body1">
+                                Answer:{' '}
+                                {question.answerId && question.answerId !== 0
+                                    ? question.options[question.answerId]
+                                    : 'No answer'}
+                            </Typography>
+                        </Stack>
+                    </Paper>
                 ))}
             </Stack>
         </Container>

@@ -27,7 +27,7 @@ const DefaultRoutes = [
                 element: <SurveyView />,
             },
             {
-                path: RoutesEnum.RESULTS,
+                path: RoutesEnum.OVERVIEW,
                 element: <OverviewView />,
             },
             {

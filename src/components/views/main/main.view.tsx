@@ -50,7 +50,7 @@ const MainView: React.FC = () => {
                             variant="outlined"
                             onClick={handleSurveyStart}
                         >
-                            Begin Answering
+                            Start Survey
                         </Button>
                     </Stack>
                 )}
