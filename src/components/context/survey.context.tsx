@@ -20,7 +20,6 @@ import { WalletContext } from './wallet.context';
 
 type SurveyContextType = {
     balance: number;
-    getBalance: () => Promise<void>;
     survey: ISurvey | undefined;
     getDailySurvey: () => Promise<void>;
     isSurveyStarted: boolean;
@@ -35,7 +34,6 @@ type SurveyContextType = {
 
 const defaultValues: SurveyContextType = {
     balance: 0,
-    getBalance: async () => {},
     survey: undefined,
     getDailySurvey: async () => {},
     isSurveyStarted: false,
@@ -198,17 +196,14 @@ const SurveyContextProvider: React.FC = ({ children }) => {
     useEffect(() => {
         if (!contract) {
             loadContract();
+        } else {
+            getBalance();
         }
-    }, [contract, loadContract]);
-
-    useEffect(() => {
-        console.log(answers);
-    }, [answers]);
+    }, [contract, getBalance, loadContract]);
 
     const contextValue: SurveyContextType = useMemo(
         () => ({
             balance,
-            getBalance,
             setBalance,
             contract,
             survey,
@@ -224,7 +219,6 @@ const SurveyContextProvider: React.FC = ({ children }) => {
         }),
         [
             balance,
-            getBalance,
             contract,
             survey,
             getDailySurvey,

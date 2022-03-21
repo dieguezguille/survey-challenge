@@ -2,6 +2,7 @@ import { Button, Paper, Typography } from '@mui/material';
 import Container from '@mui/material/Container';
 import Stack from '@mui/material/Stack';
 import { useContext } from 'react';
+import Balance from '../../common/balance/balance';
 import { SurveyContext } from '../../context/survey.context';
 
 const OverviewView: React.FC = () => {
@@ -14,6 +15,7 @@ const OverviewView: React.FC = () => {
     return (
         <Container>
             <Stack alignItems="center" spacing={4}>
+                <Balance />
                 <h2>
                     Overview: <i>&apos;{survey?.title}&apos;</i>
                 </h2>
