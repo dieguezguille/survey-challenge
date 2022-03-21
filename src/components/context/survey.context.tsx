@@ -134,24 +134,6 @@ const SurveyContextProvider: React.FC = ({ children }) => {
         }
     }, [enqueueSnackbar, setIsLoading, survey]);
 
-    const getDailySurvey = useCallback(async () => {
-        setIsLoading(true);
-        try {
-            const result: ISurvey = await getSurvey();
-            setSurvey(result);
-        } catch (error) {
-            enqueueSnackbar('Failed to get daily survey.', {
-                variant: 'error',
-            });
-        } finally {
-            setIsLoading(false);
-        }
-    }, [enqueueSnackbar, setIsLoading]);
-
-    const startSurvey = () => {
-        setIsSurveyStarted(true);
-    };
-
     const getBalance = useCallback(async () => {
         setIsLoading(true);
         try {
@@ -169,6 +151,25 @@ const SurveyContextProvider: React.FC = ({ children }) => {
             setIsLoading(false);
         }
     }, [address, contract, enqueueSnackbar, setIsLoading]);
+
+    const getDailySurvey = useCallback(async () => {
+        setIsLoading(true);
+        try {
+            const result: ISurvey = await getSurvey();
+            setSurvey(result);
+        } catch (error) {
+            enqueueSnackbar('Failed to get daily survey.', {
+                variant: 'error',
+            });
+        } finally {
+            setIsLoading(false);
+            getBalance();
+        }
+    }, [enqueueSnackbar, getBalance, setIsLoading]);
+
+    const startSurvey = () => {
+        setIsSurveyStarted(true);
+    };
 
     const loadContract = useCallback(async () => {
         setIsLoading(true);
