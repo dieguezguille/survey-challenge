@@ -9,6 +9,7 @@ export const QuestionWrapper = styled(Stack)({
 
 export const QuestionProgressWrapper = styled(Stack)({
     width: '100%',
+    alignSelf: 'start',
 });
 
 export const QuestionProgress = styled(LinearProgress)({

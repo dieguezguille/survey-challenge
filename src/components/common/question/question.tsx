@@ -79,11 +79,7 @@ const Question: React.FC<QuestionProps> = ({ question, onNextQuestion }) => {
                 <SurveyImageWrapper>
                     <Image src={question.image} showLoading />
                 </SurveyImageWrapper>
-                <QuestionProgressWrapper
-                    spacing={4}
-                    alignSelf="start"
-                    width="100%"
-                >
+                <QuestionProgressWrapper spacing={4}>
                     <Typography variant="body2">
                         Remaining time: <b>{remainingTime}</b> seconds...
                     </Typography>
