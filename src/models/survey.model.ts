@@ -1,5 +1,7 @@
-export interface ISurveyQuestionOption {
-    text: string;
+export interface ISurvey {
+    title: string;
+    image: string;
+    questions: Array<ISurveyQuestion>;
 }
 
 export interface ISurveyQuestion {
@@ -9,13 +11,6 @@ export interface ISurveyQuestion {
     options: Array<ISurveyQuestionOption>;
 }
 
-export interface ISurvey {
-    title: string;
-    image: string;
-    questions: Array<ISurveyQuestion>;
-}
-
-export interface ISurveyAnswers {
-    surveyId: number;
-    answerIds: Array<number>;
+export interface ISurveyQuestionOption {
+    text: string;
 }

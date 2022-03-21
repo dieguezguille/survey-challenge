@@ -10,11 +10,8 @@ import React, {
 } from 'react';
 import contractAbi from '../../abis/survey.json';
 import { getSurvey } from '../../adapters/survey.adapter';
-import {
-    ISurvey,
-    ISurveyAnswers,
-    ISurveyQuestion,
-} from '../../models/survey.model';
+import { ISurveyResult } from '../../models/survey-result.model';
+import { ISurvey, ISurveyQuestion } from '../../models/survey.model';
 import { AppContext } from './app.context';
 import { WalletContext } from './wallet.context';
 
@@ -27,7 +24,7 @@ type SurveyContextType = {
     startSurvey: () => void;
     currentQuestion: ISurveyQuestion | undefined;
     getNextQuestion: () => void;
-    answers: ISurveyAnswers | undefined;
+    answers: ISurveyResult | undefined;
     saveAnswer: (surveyId: number, answerId: number) => void;
     submitSurvey: () => void;
 };
@@ -63,7 +60,7 @@ const SurveyContextProvider: React.FC = ({ children }) => {
     const [currentQuestion, setCurrentQuestion] = useState<
         ISurveyQuestion | undefined
     >(undefined);
-    const [answers, setAnswers] = useState<ISurveyAnswers | undefined>(
+    const [answers, setAnswers] = useState<ISurveyResult | undefined>(
         undefined
     );
 
