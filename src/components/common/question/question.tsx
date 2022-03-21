@@ -3,8 +3,7 @@ import { ISurveyQuestion } from '../../../models/survey.model';
 import Image from 'mui-image';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
-import { SurveyImageWrapper } from '../../styled/survey-image-wrapper/survey-image-wrapper';
-import { Typography } from '@mui/material';
+import Typography from '@mui/material/Typography';
 import { useCallback, useContext, useEffect, useState } from 'react';
 import { SurveyContext } from '../../context/survey.context';
 import {
@@ -13,6 +12,7 @@ import {
     QuestionWrapper,
 } from './question.styles';
 import { CenteredStack } from '../../styled/centered-stack/centered-stack';
+import { SurveyImageWrapper } from '../../styled/survey-image-wrapper/survey-image-wrapper';
 
 type QuestionProps = {
     question: ISurveyQuestion;

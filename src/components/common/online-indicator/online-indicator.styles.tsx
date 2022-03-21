@@ -1,7 +1,7 @@
 import { styled } from '@mui/material';
 import green from '@mui/material/colors/green';
 import red from '@mui/material/colors/red';
-import { Box } from '@mui/system';
+import Box from '@mui/system/Box';
 
 type StyledOnlineIndicatorProps = {
     isOnline: boolean;
