@@ -28,11 +28,11 @@ const OverviewView: React.FC = () => {
                                 </Typography>
                                 <Typography variant="body1">
                                     Answer:{' '}
-                                    {answers
+                                    {answers && answers.answerIds[index] > 0
                                         ? question.options[
-                                              answers.answerIds[index]
+                                              answers.answerIds[index] - 1
                                           ].text
-                                        : ''}
+                                        : 'No answer'}
                                 </Typography>
                             </Stack>
                         </Paper>
