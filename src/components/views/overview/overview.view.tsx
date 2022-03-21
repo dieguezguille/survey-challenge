@@ -1,35 +1,48 @@
-import { Paper, Typography } from '@mui/material';
+import { Button, Paper, Typography } from '@mui/material';
 import Container from '@mui/material/Container';
 import Stack from '@mui/material/Stack';
 import { useContext } from 'react';
 import { SurveyContext } from '../../context/survey.context';
 
 const OverviewView: React.FC = () => {
-    const { survey, answers } = useContext(SurveyContext);
+    const { survey, answers, submitSurvey } = useContext(SurveyContext);
+
+    const handleSurveySubmit = () => {
+        submitSurvey();
+    };
+
     return (
         <Container>
-            <Stack alignItems="center">
+            <Stack alignItems="center" spacing={4}>
                 <h2>
                     Overview: <i>&apos;{survey?.title}&apos;</i>
                 </h2>
-            </Stack>
-            <Stack spacing={2}>
-                {survey?.questions.map((question, index) => (
-                    <Paper key={index} sx={{ padding: '15px' }}>
-                        <Stack spacing={1}>
-                            <Typography variant="h6">
-                                Question: {question.text}
-                            </Typography>
-                            <Typography variant="body1">
-                                Answer:{' '}
-                                {answers
-                                    ? question.options[answers.answerIds[index]]
-                                          .text
-                                    : ''}
-                            </Typography>
-                        </Stack>
-                    </Paper>
-                ))}
+                <Stack spacing={2}>
+                    {survey?.questions.map((question, index) => (
+                        <Paper key={index} sx={{ padding: '15px' }}>
+                            <Stack spacing={1}>
+                                <Typography variant="h6">
+                                    Question: {question.text}
+                                </Typography>
+                                <Typography variant="body1">
+                                    Answer:{' '}
+                                    {answers
+                                        ? question.options[
+                                              answers.answerIds[index]
+                                          ].text
+                                        : ''}
+                                </Typography>
+                            </Stack>
+                        </Paper>
+                    ))}
+                </Stack>
+                <Button
+                    variant="outlined"
+                    color="inherit"
+                    onClick={handleSurveySubmit}
+                >
+                    Submit Answers
+                </Button>
             </Stack>
         </Container>
     );

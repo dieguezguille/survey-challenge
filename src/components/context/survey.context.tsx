@@ -30,6 +30,7 @@ type SurveyContextType = {
     getNextQuestion: () => void;
     answers: ISurveyAnswers | undefined;
     saveAnswer: (surveyId: number, answerId: number) => void;
+    submitSurvey: () => void;
 };
 
 const defaultValues: SurveyContextType = {
@@ -44,6 +45,7 @@ const defaultValues: SurveyContextType = {
     getNextQuestion: () => {},
     answers: undefined,
     saveAnswer: () => {},
+    submitSurvey: () => {},
 };
 
 export const SurveyContext = createContext(defaultValues);
@@ -66,6 +68,31 @@ const SurveyContextProvider: React.FC = ({ children }) => {
     const [answers, setAnswers] = useState<ISurveyAnswers | undefined>(
         undefined
     );
+
+    const submitSurvey = useCallback(async () => {
+        setIsLoading(true);
+        try {
+            if (contract && answers) {
+                const result = await contract.submit(
+                    answers.surveyId,
+                    answers.answerIds
+                );
+                if (result) {
+                    console.log(result);
+                    enqueueSnackbar('Answers submitted.', {
+                        variant: 'success',
+                    });
+                }
+            }
+        } catch (error) {
+            enqueueSnackbar('Error submitting survey.', {
+                variant: 'error',
+            });
+            console.log(error);
+        } finally {
+            setIsLoading(false);
+        }
+    }, [answers, contract, enqueueSnackbar, setIsLoading]);
 
     const saveAnswer = useCallback((surveyId: number, answerId: number) => {
         setAnswers((previousState) => {
@@ -97,7 +124,7 @@ const SurveyContextProvider: React.FC = ({ children }) => {
                 });
             }
         } catch (error) {
-            enqueueSnackbar('Failed to get next question', {
+            enqueueSnackbar('Failed to get next question.', {
                 variant: 'error',
             });
         } finally {
@@ -132,11 +159,14 @@ const SurveyContextProvider: React.FC = ({ children }) => {
                 setBalance(parseFloat(newBalance));
             }
         } catch (error) {
+            enqueueSnackbar('Error getting token balance.', {
+                variant: 'error',
+            });
             console.log(error);
         } finally {
             setIsLoading(false);
         }
-    }, [address, contract, setIsLoading]);
+    }, [address, contract, enqueueSnackbar, setIsLoading]);
 
     const loadContract = useCallback(async () => {
         setIsLoading(true);
@@ -190,6 +220,7 @@ const SurveyContextProvider: React.FC = ({ children }) => {
             getNextQuestion,
             saveAnswer,
             answers,
+            submitSurvey,
         }),
         [
             balance,
@@ -203,6 +234,7 @@ const SurveyContextProvider: React.FC = ({ children }) => {
             getNextQuestion,
             saveAnswer,
             answers,
+            submitSurvey,
         ]
     );
 
