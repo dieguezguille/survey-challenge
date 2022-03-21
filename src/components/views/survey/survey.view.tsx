@@ -32,7 +32,7 @@ const SurveyView: React.FC = () => {
     }, [getNextQuestion, handleNextQuestion, isSurveyStarted]);
 
     useEffect(() => {
-        if (isSurveyFinished) navigate(RoutesEnum.RESULTS, { replace: true });
+        if (isSurveyFinished) navigate(RoutesEnum.OVERVIEW, { replace: true });
     });
 
     return (

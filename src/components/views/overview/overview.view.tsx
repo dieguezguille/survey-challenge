@@ -22,9 +22,9 @@ const OverviewView: React.FC = () => {
                             </Typography>
                             <Typography variant="body1">
                                 Answer:{' '}
-                                {question.answerId && question.answerId !== 0
+                                {/* {question.answerId && question.answerId !== 0
                                     ? question.options[question.answerId]
-                                    : 'No answer'}
+                                    : 'No answer'} */}
                             </Typography>
                         </Stack>
                     </Paper>
