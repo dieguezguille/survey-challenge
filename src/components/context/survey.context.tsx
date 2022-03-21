@@ -163,7 +163,7 @@ const SurveyContextProvider: React.FC = ({ children }) => {
             });
         } finally {
             setIsLoading(false);
-            getBalance();
+            await getBalance();
         }
     }, [enqueueSnackbar, getBalance, setIsLoading]);
 
