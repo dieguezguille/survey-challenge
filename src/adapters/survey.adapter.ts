@@ -2,6 +2,11 @@ import axios from 'axios';
 import { ISurvey } from '../models/survey.model';
 
 export const getSurvey = async () => {
-    const result = await axios.get('/surveys/survey-sample.json');
-    return result.data as ISurvey;
+    const surveyUrl = process.env.REACT_APP_SURVEY_URL;
+    if (surveyUrl) {
+        const result = await axios.get(surveyUrl);
+        return result.data as ISurvey;
+    } else {
+        throw Error('.env file configuration missing.');
+    }
 };
