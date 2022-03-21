@@ -3,7 +3,6 @@ import { Navigate, RouteObject, useRoutes } from 'react-router-dom';
 import { RoutesEnum } from '../../enums/routes.enum';
 import { WalletContext } from '../context/wallet.context';
 import ContentLayout from '../layout/content-layout';
-import ErrorView from '../views/error/error.view';
 import ForbiddenView from '../views/forbidden/forbidden.view';
 import MainView from '../views/main/main.view';
 import SurveyView from '../views/survey/survey.view';
@@ -32,7 +31,7 @@ const DefaultRoutes = [
             },
             {
                 path: RoutesEnum.NO_MATCH,
-                element: <ErrorView />,
+                element: <Navigate to={RoutesEnum.FORBIDDEN} />,
             },
         ],
     },
