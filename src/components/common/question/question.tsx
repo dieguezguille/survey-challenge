@@ -4,9 +4,15 @@ import Image from 'mui-image';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import { SurveyImageWrapper } from '../../styled/survey-image-wrapper/survey-image-wrapper';
-import { LinearProgress, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import { useCallback, useContext, useEffect, useState } from 'react';
 import { SurveyContext } from '../../context/survey.context';
+import {
+    QuestionProgress,
+    QuestionProgressWrapper,
+    QuestionWrapper,
+} from './question.styles';
+import { CenteredStack } from '../../styled/centered-stack/centered-stack';
 
 type QuestionProps = {
     question: ISurveyQuestion;
@@ -65,32 +71,27 @@ const Question: React.FC<QuestionProps> = ({ question, onNextQuestion }) => {
     }, [handleOptionClick, remainingTime]);
 
     return (
-        <Stack spacing={6} padding="3em">
-            <Stack alignItems="center" spacing={4}>
+        <QuestionWrapper spacing={6}>
+            <CenteredStack spacing={4}>
                 <h2>
                     <i>{question.text}</i>
                 </h2>
                 <SurveyImageWrapper>
                     <Image src={question.image} showLoading />
                 </SurveyImageWrapper>
-                <Stack spacing={4} alignSelf="start" width="100%">
+                <QuestionProgressWrapper
+                    spacing={4}
+                    alignSelf="start"
+                    width="100%"
+                >
                     <Typography variant="body2">
                         Remaining time: <b>{remainingTime}</b> seconds...
                     </Typography>
-                    <LinearProgress
-                        sx={{ width: '100%' }}
-                        variant="determinate"
-                        value={progress}
-                    />
-                </Stack>
-            </Stack>
+                    <QuestionProgress variant="determinate" value={progress} />
+                </QuestionProgressWrapper>
+            </CenteredStack>
             <Stack>
-                <Grid
-                    direction="row"
-                    spacing={2}
-                    justifyContent="center"
-                    container
-                >
+                <Grid spacing={2} container>
                     {question.options.map((option, index) => (
                         <Grid item xs={12} sm={6} md={3} key={index}>
                             <Button
@@ -105,7 +106,7 @@ const Question: React.FC<QuestionProps> = ({ question, onNextQuestion }) => {
                     ))}
                 </Grid>
             </Stack>
-        </Stack>
+        </QuestionWrapper>
     );
 };
 
