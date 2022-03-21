@@ -1,12 +1,13 @@
 import { Button, Stack } from '@mui/material';
 import Container from '@mui/material/Container';
-import { useContext, useEffect } from 'react';
-import { SurveyContext } from '../../context/survey.context';
 import Image from 'mui-image';
+import { useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+
 import { RoutesEnum } from '../../../enums/routes.enum';
-import { SurveyImageWrapper } from '../../styled/survey-image-wrapper/survey-image-wrapper';
 import Balance from '../../common/balance/balance';
+import { SurveyContext } from '../../context/survey.context';
+import { SurveyImageWrapper } from '../../styled/survey-image-wrapper/survey-image-wrapper';
 
 const MainView: React.FC = () => {
     const navigate = useNavigate();

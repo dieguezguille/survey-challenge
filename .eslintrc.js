@@ -24,7 +24,13 @@ module.exports = {
         ecmaVersion: 'latest',
         sourceType: 'module',
     },
-    plugins: ['react', '@typescript-eslint', 'prettier', 'react-hooks'],
+    plugins: [
+        'react',
+        '@typescript-eslint',
+        'prettier',
+        'react-hooks',
+        'simple-import-sort',
+    ],
     rules: {
         'react/prop-types': 'off',
         '@typescript-eslint/no-empty-function': 'off',
@@ -36,6 +42,8 @@ module.exports = {
                 endOfLine: 'auto',
             },
         ],
+        'simple-import-sort/exports': 'error',
+        'simple-import-sort/imports': 'error',
         quotes: ['error', 'single'],
         semi: ['error', 'always'],
     },

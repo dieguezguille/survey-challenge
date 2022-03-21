@@ -8,10 +8,11 @@ import React, {
     useMemo,
     useState,
 } from 'react';
+
 import contractAbi from '../../abis/survey.json';
 import { getSurvey } from '../../adapters/survey.adapter';
-import { ISurveyResult } from '../../models/survey-result.model';
 import { ISurvey, ISurveyQuestion } from '../../models/survey.model';
+import { ISurveyResult } from '../../models/survey-result.model';
 import { AppContext } from './app.context';
 import { WalletContext } from './wallet.context';
 

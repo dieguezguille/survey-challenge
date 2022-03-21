@@ -1,12 +1,13 @@
 import { useContext, useEffect, useState } from 'react';
 import { Navigate, RouteObject, useRoutes } from 'react-router-dom';
+
 import { RoutesEnum } from '../../enums/routes.enum';
 import { WalletContext } from '../context/wallet.context';
 import ContentLayout from '../layout/content-layout';
 import ForbiddenView from '../views/forbidden/forbidden.view';
 import MainView from '../views/main/main.view';
-import SurveyView from '../views/survey/survey.view';
 import OverviewView from '../views/overview/overview.view';
+import SurveyView from '../views/survey/survey.view';
 
 const DefaultRoutes = [
     {

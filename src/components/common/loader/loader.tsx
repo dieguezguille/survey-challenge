@@ -1,5 +1,6 @@
 import CircularProgress from '@mui/material/CircularProgress';
 import { useContext } from 'react';
+
 import { AppContext } from '../../context/app.context';
 import { StyledBackdrop } from './loader.styles';
 
