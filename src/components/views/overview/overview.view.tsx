@@ -6,7 +6,7 @@ import Balance from '../../common/balance/balance';
 import { SurveyContext } from '../../context/survey.context';
 
 const OverviewView: React.FC = () => {
-    const { survey, answers, submitSurvey } = useContext(SurveyContext);
+    const { survey, surveyResult, submitSurvey } = useContext(SurveyContext);
 
     const handleSurveySubmit = () => {
         submitSurvey();
@@ -15,7 +15,7 @@ const OverviewView: React.FC = () => {
     return (
         <Container>
             <Stack alignItems="center" spacing={4}>
-                <Balance />
+                <Balance currencyName="QUIZ" />
                 <h2>
                     Overview: <i>&apos;{survey?.title}&apos;</i>
                 </h2>
@@ -28,9 +28,10 @@ const OverviewView: React.FC = () => {
                                 </Typography>
                                 <Typography variant="body1">
                                     Answer:{' '}
-                                    {answers && answers.answerIds[index] > 0
+                                    {surveyResult &&
+                                    surveyResult.answerIds[index] > 0
                                         ? question.options[
-                                              answers.answerIds[index] - 1
+                                              surveyResult.answerIds[index] - 1
                                           ].text
                                         : 'No answer'}
                                 </Typography>
@@ -43,7 +44,7 @@ const OverviewView: React.FC = () => {
                     color="inherit"
                     onClick={handleSurveySubmit}
                 >
-                    Submit Answers
+                    Submit Survey
                 </Button>
             </Stack>
         </Container>

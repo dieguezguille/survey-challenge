@@ -1,6 +1,9 @@
+import { ChangeCircle } from '@mui/icons-material';
+import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import { useContext } from 'react';
 import { WalletContext } from '../../context/wallet.context';
+import OnlineIndicator from '../online-indicator/online-indicator';
 
 const WalletConnector: React.FC = () => {
     const {
@@ -21,15 +24,20 @@ const WalletConnector: React.FC = () => {
     };
 
     return !isInvalidChain ? (
-        <Button color="inherit" onClick={handleConnect}>
-            {isConnected
-                ? `${String(address).substring(0, 6)}...${String(
-                      address
-                  ).substring(38)}`
-                : 'Connect Wallet'}
+        <Button onClick={handleConnect}>
+            <Stack direction="row" alignItems="center">
+                <OnlineIndicator isOnline={isConnected} />
+                <div>
+                    {isConnected
+                        ? `${String(address).substring(0, 6)}...${String(
+                              address
+                          ).substring(38)}`
+                        : 'Connect Wallet'}
+                </div>
+            </Stack>
         </Button>
     ) : (
-        <Button color="inherit" onClick={handleChainSwitch}>
+        <Button startIcon={<ChangeCircle />} onClick={handleChainSwitch}>
             Switch to Ropsten
         </Button>
     );

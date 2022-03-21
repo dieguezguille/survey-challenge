@@ -1,4 +1,5 @@
-import { Paper, styled } from '@mui/material';
+import { styled } from '@mui/material';
+import Paper from '@mui/material/Paper';
 
 export const CustomPill = styled(Paper)({
     padding: '5px',
