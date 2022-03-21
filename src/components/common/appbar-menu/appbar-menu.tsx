@@ -1,27 +1,23 @@
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
 import WalletConnector from '../wallet-connector/wallet-connector';
-import { ToolbarWrapper } from './appbar-menu.styles';
+import {
+    AppBarTitle,
+    AppBarWrapper,
+    StyledAppBar,
+    ToolbarWrapper,
+} from './appbar-menu.styles';
 
 const AppBarMenu: React.FC = () => (
-    <Box sx={{ flexGrow: 1 }}>
-        <AppBar position="static">
-            <ToolbarWrapper sx={{ padding: '0px' }}>
+    <AppBarWrapper>
+        <StyledAppBar>
+            <ToolbarWrapper>
                 <Toolbar>
-                    <Typography
-                        variant="h6"
-                        component="div"
-                        sx={{ flexGrow: 1 }}
-                    >
-                        ❔ Survey Challenge
-                    </Typography>
+                    <AppBarTitle variant="h6">❔ Survey Challenge</AppBarTitle>
                     <WalletConnector />
                 </Toolbar>
             </ToolbarWrapper>
-        </AppBar>
-    </Box>
+        </StyledAppBar>
+    </AppBarWrapper>
 );
 
 export default AppBarMenu;
