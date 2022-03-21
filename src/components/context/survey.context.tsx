@@ -24,7 +24,7 @@ type SurveyContextType = {
     startSurvey: () => void;
     currentQuestion: ISurveyQuestion | undefined;
     getNextQuestion: () => void;
-    answers: ISurveyResult | undefined;
+    surveyResult: ISurveyResult | undefined;
     saveAnswer: (surveyId: number, answerId: number) => void;
     submitSurvey: () => void;
 };
@@ -38,7 +38,7 @@ const defaultValues: SurveyContextType = {
     startSurvey: () => {},
     currentQuestion: undefined,
     getNextQuestion: () => {},
-    answers: undefined,
+    surveyResult: undefined,
     saveAnswer: () => {},
     submitSurvey: () => {},
 };
@@ -60,22 +60,22 @@ const SurveyContextProvider: React.FC = ({ children }) => {
     const [currentQuestion, setCurrentQuestion] = useState<
         ISurveyQuestion | undefined
     >(undefined);
-    const [answers, setAnswers] = useState<ISurveyResult | undefined>(
+    const [surveyResult, setSurveyResult] = useState<ISurveyResult | undefined>(
         undefined
     );
 
     const submitSurvey = useCallback(async () => {
         setIsLoading(true);
         try {
-            if (contract && answers) {
+            if (contract && surveyResult) {
                 const tx: ContractTransaction = await contract.submit(
-                    answers.surveyId,
-                    answers.answerIds
+                    surveyResult.surveyId,
+                    surveyResult.answerIds
                 );
                 if (tx) {
                     console.log(tx);
                     await tx.wait();
-                    enqueueSnackbar('Answers submitted.', {
+                    enqueueSnackbar('Survey submitted.', {
                         variant: 'success',
                     });
                 }
@@ -91,10 +91,10 @@ const SurveyContextProvider: React.FC = ({ children }) => {
         } finally {
             setIsLoading(false);
         }
-    }, [answers, contract, enqueueSnackbar, setIsLoading]);
+    }, [surveyResult, contract, enqueueSnackbar, setIsLoading]);
 
     const saveAnswer = useCallback((surveyId: number, answerId: number) => {
-        setAnswers((previousState) => {
+        setSurveyResult((previousState) => {
             if (!previousState) {
                 return { surveyId: surveyId, answerIds: [answerId] };
             }
@@ -216,7 +216,7 @@ const SurveyContextProvider: React.FC = ({ children }) => {
             currentQuestion,
             getNextQuestion,
             saveAnswer,
-            answers,
+            surveyResult,
             submitSurvey,
         }),
         [
@@ -229,7 +229,7 @@ const SurveyContextProvider: React.FC = ({ children }) => {
             currentQuestion,
             getNextQuestion,
             saveAnswer,
-            answers,
+            surveyResult,
             submitSurvey,
         ]
     );
