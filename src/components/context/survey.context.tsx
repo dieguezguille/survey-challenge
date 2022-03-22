@@ -195,6 +195,7 @@ const SurveyContextProvider: React.FC = ({ children }) => {
             enqueueSnackbar('Failed to get daily survey.', {
                 variant: 'error',
             });
+            console.log(error);
         } finally {
             setIsLoading(false);
         }
@@ -207,12 +208,12 @@ const SurveyContextProvider: React.FC = ({ children }) => {
     const loadContract = useCallback(async () => {
         setIsLoading(true);
         try {
-            if (REACT_APP_CONTRACT_ADDRESS && provider) {
+            if (REACT_APP_CONTRACT_ADDRESS) {
                 setContract(
                     await new ethers.Contract(
                         REACT_APP_CONTRACT_ADDRESS,
                         contractAbi,
-                        provider.getSigner()
+                        provider?.getSigner()
                     )
                 );
             } else {
