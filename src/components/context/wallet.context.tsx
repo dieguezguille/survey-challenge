@@ -47,6 +47,12 @@ const defaultValues: WalletContextType = {
 
 export const WalletContext = createContext(defaultValues);
 
+const {
+    REACT_APP_TESTNET_ID,
+    REACT_APP_TESTNET_NUMBER,
+    REACT_APP_TESTNET_RPC,
+} = process.env;
+
 const WalletContextProvider: React.FC = ({ children }) => {
     const { enqueueSnackbar } = useSnackbar();
     const { isMetamaskError } = useMetamaskUtils();
@@ -89,10 +95,7 @@ const WalletContextProvider: React.FC = ({ children }) => {
             if (!provider) return;
             const network = await provider.getNetwork();
             const chain = network.chainId;
-            if (
-                chain &&
-                chain.toString() !== process.env.REACT_APP_TESTNET_ID
-            ) {
+            if (chain && chain.toString() !== REACT_APP_TESTNET_NUMBER) {
                 enqueueSnackbar(
                     'Unsupported chain detected. Make sure to be connected to Ropsten Network',
                     { variant: 'error' }
@@ -117,7 +120,7 @@ const WalletContextProvider: React.FC = ({ children }) => {
         try {
             await provider?.send(MetamaskCommands.SWITCH_CHAIN, [
                 {
-                    chainId: '0x3',
+                    chainId: REACT_APP_TESTNET_ID,
                 },
             ]);
         } catch (error) {
@@ -125,8 +128,8 @@ const WalletContextProvider: React.FC = ({ children }) => {
                 try {
                     await provider?.send(MetamaskCommands.ADD_CHAIN, [
                         {
-                            chainId: '0x3',
-                            rpcUrl: 'https://ropsten.infura.io/v3/',
+                            chainId: REACT_APP_TESTNET_ID,
+                            rpcUrl: REACT_APP_TESTNET_RPC,
                         },
                     ]);
                 } catch (error) {

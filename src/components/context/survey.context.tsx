@@ -47,6 +47,8 @@ const defaultValues: SurveyContextType = {
 
 export const SurveyContext = createContext(defaultValues);
 
+const { REACT_APP_CONTRACT_ADDRESS } = process.env;
+
 const SurveyContextProvider: React.FC = ({ children }) => {
     const { setIsLoading } = useContext(AppContext);
     const { address, provider } = useContext(WalletContext);
@@ -205,13 +207,12 @@ const SurveyContextProvider: React.FC = ({ children }) => {
     const loadContract = useCallback(async () => {
         setIsLoading(true);
         try {
-            const contractAddress = process.env.REACT_APP_CONTRACT_ADDRESS;
-            if (contractAddress) {
+            if (REACT_APP_CONTRACT_ADDRESS && provider) {
                 setContract(
                     await new ethers.Contract(
-                        contractAddress,
+                        REACT_APP_CONTRACT_ADDRESS,
                         contractAbi,
-                        provider?.getSigner()
+                        provider.getSigner()
                     )
                 );
             } else {
