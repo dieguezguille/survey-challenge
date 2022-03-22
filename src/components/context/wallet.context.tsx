@@ -244,6 +244,12 @@ const WalletContextProvider: React.FC = ({ children }) => {
         return () => {};
     }, [disconnect, enqueueSnackbar, setAddress]);
 
+    useEffect(() => {
+        if (provider) {
+            connect();
+        }
+    }, [connect, provider]);
+
     return (
         <WalletContext.Provider value={contextValue}>
             {children}
