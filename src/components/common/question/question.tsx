@@ -10,6 +10,7 @@ import { SurveyContext } from '../../context/survey.context';
 import { CenteredStack } from '../../styled/centered-stack/centered-stack';
 import { SurveyImageWrapper } from '../../styled/survey-image-wrapper/survey-image-wrapper';
 import {
+    QuestionGrid,
     QuestionProgress,
     QuestionProgressWrapper,
     QuestionWrapper,
@@ -88,7 +89,7 @@ const Question: React.FC<QuestionProps> = ({ question, onNextQuestion }) => {
                 </QuestionProgressWrapper>
             </CenteredStack>
             <Stack>
-                <Grid spacing={2} container>
+                <QuestionGrid spacing={2} container>
                     {question.options.map((option, index) => (
                         <Grid item xs={12} sm={6} md={3} key={index}>
                             <Button
@@ -101,7 +102,7 @@ const Question: React.FC<QuestionProps> = ({ question, onNextQuestion }) => {
                             </Button>
                         </Grid>
                     ))}
-                </Grid>
+                </QuestionGrid>
             </Stack>
         </QuestionWrapper>
     );
