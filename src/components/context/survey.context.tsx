@@ -1,4 +1,4 @@
-import { Contract, ContractTransaction, ethers } from 'ethers';
+import { BigNumber, Contract, ContractTransaction, ethers } from 'ethers';
 import { useSnackbar } from 'notistack';
 import React, {
     createContext,
@@ -65,19 +65,54 @@ const SurveyContextProvider: React.FC = ({ children }) => {
         undefined
     );
 
+    const getBalance = useCallback(async () => {
+        setIsLoading(true);
+        try {
+            if (contract && address) {
+                const result = await contract.balanceOf(address);
+                const newBalance = ethers.utils.formatUnits(result, 18);
+                setBalance(parseFloat(newBalance));
+            }
+        } catch (error) {
+            enqueueSnackbar('Error getting token balance.', {
+                variant: 'error',
+            });
+            console.log(error);
+        } finally {
+            setIsLoading(false);
+        }
+    }, [address, contract, enqueueSnackbar, setIsLoading]);
+
+    const transferEventHandler = useCallback(
+        (from: string, _to: string, amount: BigNumber) => {
+            if (from === ethers.constants.AddressZero) {
+                const tokensReceived = amount.toNumber();
+                enqueueSnackbar(
+                    `Received ${tokensReceived} ${
+                        tokensReceived > 1 ? 'tokens' : 'token'
+                    }!`,
+                    {
+                        variant: 'success',
+                    }
+                );
+                getBalance();
+            }
+        },
+        [enqueueSnackbar, getBalance]
+    );
+
     const submitSurvey = useCallback(async () => {
         setIsLoading(true);
         try {
             if (contract && surveyResult) {
-                const tx: ContractTransaction = await contract.submit(
+                contract.on('Transfer', transferEventHandler);
+                const transaction: ContractTransaction = await contract.submit(
                     surveyResult.surveyId,
                     surveyResult.answerIds
                 );
-                if (tx) {
-                    console.log(tx);
-                    await tx.wait();
-                    enqueueSnackbar('Survey submitted.', {
-                        variant: 'success',
+                if (transaction) {
+                    enqueueSnackbar('Survey submitted. Waiting for tokens...', {
+                        variant: 'info',
                     });
                 }
             }
@@ -92,7 +127,13 @@ const SurveyContextProvider: React.FC = ({ children }) => {
         } finally {
             setIsLoading(false);
         }
-    }, [surveyResult, contract, enqueueSnackbar, setIsLoading]);
+    }, [
+        setIsLoading,
+        contract,
+        surveyResult,
+        transferEventHandler,
+        enqueueSnackbar,
+    ]);
 
     const saveAnswer = useCallback((surveyId: number, answerId: number) => {
         setSurveyResult((previousState) => {
@@ -132,24 +173,6 @@ const SurveyContextProvider: React.FC = ({ children }) => {
         }
     }, [enqueueSnackbar, setIsLoading, survey]);
 
-    const getBalance = useCallback(async () => {
-        setIsLoading(true);
-        try {
-            if (contract && address) {
-                const result = await contract.balanceOf(address);
-                const newBalance = ethers.utils.formatUnits(result, 18);
-                setBalance(parseFloat(newBalance));
-            }
-        } catch (error) {
-            enqueueSnackbar('Error getting token balance.', {
-                variant: 'error',
-            });
-            console.log(error);
-        } finally {
-            setIsLoading(false);
-        }
-    }, [address, contract, enqueueSnackbar, setIsLoading]);
-
     const getDailySurvey = useCallback(async () => {
         setIsLoading(true);
         try {
@@ -161,9 +184,8 @@ const SurveyContextProvider: React.FC = ({ children }) => {
             });
         } finally {
             setIsLoading(false);
-            await getBalance();
         }
-    }, [enqueueSnackbar, getBalance, setIsLoading]);
+    }, [enqueueSnackbar, setIsLoading]);
 
     const startSurvey = () => {
         setIsSurveyStarted(true);
@@ -202,7 +224,13 @@ const SurveyContextProvider: React.FC = ({ children }) => {
         } else {
             getBalance();
         }
-    }, [contract, getBalance, loadContract]);
+    }, [contract, enqueueSnackbar, getBalance, loadContract]);
+
+    useEffect(() => {
+        if (address && contract) {
+            getBalance();
+        }
+    }, [address, contract, getBalance]);
 
     const contextValue: SurveyContextType = useMemo(
         () => ({
