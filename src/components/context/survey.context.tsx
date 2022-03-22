@@ -1,4 +1,4 @@
-import { BigNumber, Contract, ContractTransaction, ethers } from 'ethers';
+import { Contract, ContractTransaction, ethers } from 'ethers';
 import { useSnackbar } from 'notistack';
 import React, {
     createContext,
@@ -13,6 +13,7 @@ import contractAbi from '../../abis/survey.json';
 import { getSurvey } from '../../adapters/survey.adapter';
 import { ISurvey, ISurveyQuestion } from '../../models/survey.model';
 import { ISurveyResult } from '../../models/survey-result.model';
+import { ITransferEvent } from '../../models/transfer-event.model';
 import { AppContext } from './app.context';
 import { WalletContext } from './wallet.context';
 
@@ -83,19 +84,33 @@ const SurveyContextProvider: React.FC = ({ children }) => {
         }
     }, [address, contract, enqueueSnackbar, setIsLoading]);
 
-    const transferEventHandler = useCallback(
-        (from: string, _to: string, amount: BigNumber) => {
-            if (from === ethers.constants.AddressZero) {
-                const tokensReceived = amount.toNumber();
-                enqueueSnackbar(
-                    `Received ${tokensReceived} ${
-                        tokensReceived > 1 ? 'tokens' : 'token'
-                    }!`,
-                    {
-                        variant: 'success',
-                    }
-                );
-                getBalance();
+    const handleTransactionReceipt = useCallback(
+        async (transactionReceipt: ethers.ContractReceipt) => {
+            const transferEvent = transactionReceipt.events?.find(
+                (event) => event.event === 'Transfer'
+            );
+
+            if (transferEvent && transferEvent.args) {
+                const eventArgs: ITransferEvent = {
+                    from: transferEvent.args['from'],
+                    to: transferEvent.args['to'],
+                    value: transferEvent.args['value'],
+                };
+
+                if (eventArgs.from === ethers.constants.AddressZero) {
+                    const tokensReceived = parseInt(
+                        ethers.utils.formatUnits(eventArgs.value)
+                    );
+                    enqueueSnackbar(
+                        `Received ${tokensReceived} ${
+                            tokensReceived > 1 ? 'tokens' : 'token'
+                        }!`,
+                        {
+                            variant: 'success',
+                        }
+                    );
+                    await getBalance();
+                }
             }
         },
         [enqueueSnackbar, getBalance]
@@ -105,16 +120,12 @@ const SurveyContextProvider: React.FC = ({ children }) => {
         setIsLoading(true);
         try {
             if (contract && surveyResult) {
-                contract.on('Transfer', transferEventHandler);
                 const transaction: ContractTransaction = await contract.submit(
                     surveyResult.surveyId,
                     surveyResult.answerIds
                 );
-                if (transaction) {
-                    enqueueSnackbar('Survey submitted. Waiting for tokens...', {
-                        variant: 'info',
-                    });
-                }
+                const transactionReceipt = await transaction.wait();
+                handleTransactionReceipt(transactionReceipt);
             }
         } catch (error) {
             enqueueSnackbar(
@@ -131,7 +142,7 @@ const SurveyContextProvider: React.FC = ({ children }) => {
         setIsLoading,
         contract,
         surveyResult,
-        transferEventHandler,
+        handleTransactionReceipt,
         enqueueSnackbar,
     ]);
 
