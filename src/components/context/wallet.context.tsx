@@ -10,6 +10,8 @@ import React, {
     useState,
 } from 'react';
 
+import { MetamaskCommands } from '../../enums/metamask-commands.enum';
+import { MetamaskEvents } from '../../enums/metamask-events.enum';
 import useMetamaskUtils from '../../hooks/metamask-utils.hook';
 import { AppContext } from './app.context';
 
@@ -113,7 +115,7 @@ const WalletContextProvider: React.FC = ({ children }) => {
     const requestChainSwitch = useCallback(async () => {
         setIsLoading(true);
         try {
-            await provider?.send('wallet_switchEthereumChain', [
+            await provider?.send(MetamaskCommands.SWITCH_CHAIN, [
                 {
                     chainId: '0x3',
                 },
@@ -121,7 +123,7 @@ const WalletContextProvider: React.FC = ({ children }) => {
         } catch (error) {
             if (isMetamaskError(error) && error.code === 4902) {
                 try {
-                    await provider?.send('wallet_addEthereumChain', [
+                    await provider?.send(MetamaskCommands.ADD_CHAIN, [
                         {
                             chainId: '0x3',
                             rpcUrl: 'https://ropsten.infura.io/v3/',
@@ -148,7 +150,10 @@ const WalletContextProvider: React.FC = ({ children }) => {
         try {
             if (provider) {
                 checkChain();
-                const result = await provider.send('eth_requestAccounts', []);
+                const result = await provider.send(
+                    MetamaskCommands.REQUEST_ACCOUNTS,
+                    []
+                );
                 if (result && result.length > 0) {
                     setAddress(result[0]);
                     setIsConnected(true);
@@ -213,22 +218,28 @@ const WalletContextProvider: React.FC = ({ children }) => {
                 disconnect();
             };
 
-            window.ethereum.on('accountsChanged', handleAccountsChanged);
-            window.ethereum.on('chainChanged', handleChainChanged);
-            window.ethereum.on('disconnect', handleDisconnect);
+            window.ethereum.on(
+                MetamaskEvents.ACCOUNTS_CHANGED,
+                handleAccountsChanged
+            );
+            window.ethereum.on(
+                MetamaskEvents.CHAIN_CHANGED,
+                handleChainChanged
+            );
+            window.ethereum.on(MetamaskEvents.DISCONNECT, handleDisconnect);
 
             return () => {
                 if (window.ethereum.removeListener) {
                     window.ethereum.removeListener(
-                        'accountsChanged',
+                        MetamaskEvents.ACCOUNTS_CHANGED,
                         handleAccountsChanged
                     );
                     window.ethereum.removeListener(
-                        'chainChanged',
+                        MetamaskEvents.CHAIN_CHANGED,
                         handleChainChanged
                     );
                     window.ethereum.removeListener(
-                        'disconnect',
+                        MetamaskEvents.DISCONNECT,
                         handleDisconnect
                     );
                 }
