@@ -11,8 +11,8 @@ import React, {
 
 import { MetamaskCommands } from '../enums/metamask-commands.enum';
 import { MetamaskEvents } from '../enums/metamask-events.enum';
-import useMetamaskUtils from '../hooks/metamask-utils.hook';
-import useApp from '../hooks/use-app.hook';
+import useAppLoader from '../hooks/use-app-loader.hook';
+import metamaskUtils from '../utils/metamask-utils';
 
 type WalletContextType = {
     isConnected: boolean;
@@ -54,8 +54,8 @@ const {
 } = process.env;
 
 const WalletProvider: React.FC = ({ children }) => {
-    const { showLoader, hideLoader } = useApp();
-    const { isMetamaskError } = useMetamaskUtils();
+    const { showLoader, hideLoader } = useAppLoader();
+    const { isMetamaskError } = metamaskUtils();
     const { enqueueSnackbar } = useSnackbar();
 
     const [isConnected, setIsConnected] = useState<boolean>(

@@ -5,10 +5,10 @@ type MetamaskErrorReturnType = {
     isMetamaskError: (error: any) => error is MetamaskError;
 };
 
-const useMetamaskUtils = (): MetamaskErrorReturnType => {
+const metamaskUtils = (): MetamaskErrorReturnType => {
     const isMetamaskError = (error: any): error is MetamaskError =>
         'code' in error && 'message' in error && 'stack' in error;
     return { isMetamaskError };
 };
 
-export default useMetamaskUtils;
+export default metamaskUtils;

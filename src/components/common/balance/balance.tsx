@@ -1,6 +1,7 @@
 import Stack from '@mui/material/Stack';
+import { useContext } from 'react';
 
-import useSurveyContract from '../../../hooks/use-survey-contract.hook';
+import { SurveyContractContext } from '../../../contexts/survey-contract.context';
 import { CustomPill } from './balance.styles';
 
 type BalanceProps = {
@@ -8,7 +9,7 @@ type BalanceProps = {
 };
 
 const Balance: React.FC<BalanceProps> = ({ currencyName }) => {
-    const { balance } = useSurveyContract();
+    const { balance } = useContext(SurveyContractContext);
     const currency = currencyName.toUpperCase();
 
     return (

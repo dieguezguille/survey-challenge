@@ -1,4 +1,4 @@
-const useStringUtils = () => {
+const stringUtils = () => {
     const getDottedSubstring = (
         startLength: number,
         endLength: number,
@@ -14,4 +14,4 @@ const useStringUtils = () => {
     return { getDottedSubstring };
 };
 
-export default useStringUtils;
+export default stringUtils;

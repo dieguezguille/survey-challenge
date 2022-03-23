@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Navigate, RouteObject, useRoutes } from 'react-router-dom';
 
+import { WalletContext } from '../../contexts/wallet.context';
 import { RoutesEnum } from '../../enums/routes.enum';
-import useWallet from '../../hooks/use-wallet.hook';
 import ContentLayout from '../layout/content-layout';
 import ForbiddenView from '../views/forbidden/forbidden.view';
 import MainView from '../views/main/main.view';
@@ -60,7 +60,7 @@ const RestrictedRoutes = [
 ];
 
 const Routes: React.FC = () => {
-    const { isConnected, isInvalidChain } = useWallet();
+    const { isConnected, isInvalidChain } = useContext(WalletContext);
     const [routes, setRoutes] = useState<RouteObject[]>(RestrictedRoutes);
 
     useEffect(() => {
