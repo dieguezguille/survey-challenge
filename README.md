@@ -101,12 +101,15 @@ Here are some screenshots of the app working. You can tell about the project str
 -   [ReactJs](https://reactjs.org/) - Web UI Library
 -   [Material UI](https://mui.com/) - UI Component & Styles Library
 -   [Ethers](https://docs.ethers.io/v5/) - Web3 Convenience Library
+-   [Sentry](https://sentry.io/) - Error Reporting Toolkit
 
 ## 📝 Notes <a name = "notes"></a>
 
 -   The application is live on `Heroku`. The latest version of the `main` can be found running [here](https://survey-web3-challenge.herokuapp.com/).
 
 -   Due to the challenge description not providing an actual API to fetch the `Daily Trivia` the sample JSON was served from the `/public` directory. Nevertheless, it is possible to change the URL and point to an actual API just by changing the variable `REACT_APP_SURVEY_URL` on the `.env` FILE.
+
+-   If any Sentry errors are seen in the console output, know this happens because you probably have an ad blocker of some sort installed as a browser extension.
 
 ## ♻️ Improvements <a name = "improvements"></a>
 
