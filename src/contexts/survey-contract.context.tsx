@@ -14,7 +14,7 @@ import { ITransferEvent } from '../models/transfer-event.model';
 import { AppContext } from './app.context';
 import { WalletContext } from './wallet.context';
 
-type SurveyContractContextType = {
+export type SurveyContractContextType = {
     balance: number;
     setBalance: Dispatch<React.SetStateAction<number>>;
     contract: Contract | undefined;

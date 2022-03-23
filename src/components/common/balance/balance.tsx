@@ -20,7 +20,7 @@ const Balance: React.FC<BalanceProps> = ({ currencyName }) => {
             </div>
             <CustomPill>
                 <Stack alignItems="center">
-                    <strong>
+                    <strong aria-label="balance">
                         {balance} ${currency}
                     </strong>
                 </Stack>
