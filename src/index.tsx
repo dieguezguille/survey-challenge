@@ -1,4 +1,6 @@
 import { CssBaseline, ThemeProvider } from '@mui/material';
+import * as Sentry from '@sentry/react';
+import { BrowserTracing } from '@sentry/tracing';
 import { SnackbarProvider } from 'notistack';
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -10,6 +12,12 @@ import SurveyContextProvider from './components/context/survey.context';
 import WalletContextProvider from './components/context/wallet.context';
 import reportWebVitals from './reportWebVitals';
 import CustomTheme from './theme/custom.theme';
+
+Sentry.init({
+    dsn: 'https://0390e057839243bfbbb20e59d25ec956@o1175235.ingest.sentry.io/6272006',
+    integrations: [new BrowserTracing()],
+    tracesSampleRate: 1.0,
+});
 
 ReactDOM.render(
     <React.StrictMode>
