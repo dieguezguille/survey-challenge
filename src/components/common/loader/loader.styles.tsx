@@ -4,5 +4,5 @@ import grey from '@mui/material/colors/grey';
 
 export const StyledBackdrop = styled(Backdrop)(({ theme }) => ({
     color: grey[50],
-    zIndex: theme.zIndex.drawer + 1,
+    zIndex: theme.zIndex.appBar - 1,
 }));
