@@ -1,8 +1,8 @@
 import { render, screen } from '@testing-library/react';
 
-import { surveyContractContext } from '../__mocks__/contexts/survey-contract';
-import Balance from '../components/common/balance/balance';
-import { SurveyContractContext } from '../contexts/survey-contract.context';
+import { surveyContractContext } from '../../__mocks__/contexts/survey-contract';
+import Balance from '../../components/common/balance/balance';
+import { SurveyContractContext } from '../../contexts/survey-contract.context';
 
 const expectedTokenName = 'TEST';
 
