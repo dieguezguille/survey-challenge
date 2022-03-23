@@ -62,6 +62,10 @@ $ yarn test
 $ yarn start
 ```
 
+4 . Make sure to [install Metamask](https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn?hl=en) on your browser.
+
+5 . Get some `Ropsten ETH (rETH)` from a faucet [like this one](https://faucet.egorfine.com/)
+
 ## 📸 Preview <a name="preview"></a>
 
 Here are some screenshots of the app working. You can tell about the project structure just by looking at the user flow.
