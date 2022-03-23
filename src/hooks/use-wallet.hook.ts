@@ -6,11 +6,11 @@ const useWallet = () => {
     const {
         isConnected,
         isInvalidChain,
-        address,
-        provider,
+        requestChainSwitch,
         connect,
         disconnect,
-        requestChainSwitch,
+        address,
+        provider,
     } = useContext(WalletContext);
 
     const switchConnection = () => {
@@ -19,13 +19,13 @@ const useWallet = () => {
 
     return {
         isConnected,
-        address,
         isInvalidChain,
-        provider,
+        requestChainSwitch,
         switchConnection,
         connect,
         disconnect,
-        requestChainSwitch,
+        address,
+        provider,
     };
 };
 

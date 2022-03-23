@@ -14,10 +14,8 @@ const MainView: React.FC = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (!survey) {
-            getDailySurvey();
-        }
-    }, [getDailySurvey, survey]);
+        getDailySurvey();
+    }, [getDailySurvey]);
 
     return (
         <Container>
