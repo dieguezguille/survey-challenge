@@ -1,21 +1,17 @@
 import { Button, Stack } from '@mui/material';
 import Container from '@mui/material/Container';
 import Image from 'mui-image';
-import { useContext, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { RoutesEnum } from '../../../enums/routes.enum';
+import useApp from '../../../hooks/use-app.hook';
 import Balance from '../../common/balance/balance';
-import { SurveyContext } from '../../context/survey.context';
 import { SurveyImageWrapper } from '../../styled/survey-image-wrapper/survey-image-wrapper';
 
 const MainView: React.FC = () => {
+    const { survey, getDailySurvey } = useApp();
     const navigate = useNavigate();
-    const { getDailySurvey, survey } = useContext(SurveyContext);
-
-    const handleSurveyStart = () => {
-        navigate(RoutesEnum.SURVEY);
-    };
 
     useEffect(() => {
         getDailySurvey();
@@ -37,7 +33,7 @@ const MainView: React.FC = () => {
                         <Button
                             color="secondary"
                             variant="outlined"
-                            onClick={handleSurveyStart}
+                            onClick={() => navigate(RoutesEnum.SURVEY)}
                         >
                             Start Survey
                         </Button>

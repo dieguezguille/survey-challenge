@@ -3,10 +3,10 @@ import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Image from 'mui-image';
-import { useCallback, useContext, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
+import useApp from '../../../hooks/use-app.hook';
 import { ISurveyQuestion } from '../../../models/survey.model';
-import { SurveyContext } from '../../context/survey.context';
 import { CenteredStack } from '../../styled/centered-stack/centered-stack';
 import { SurveyImageWrapper } from '../../styled/survey-image-wrapper/survey-image-wrapper';
 import {
@@ -22,11 +22,11 @@ type QuestionProps = {
 };
 
 const Question: React.FC<QuestionProps> = ({ question, onNextQuestion }) => {
-    const { saveAnswer } = useContext(SurveyContext);
+    const { saveAnswer } = useApp();
+
     const [remainingTime, setRemainingTime] = useState<number>(
         question.lifetimeSeconds
     );
-
     const [progress, setProgress] = useState<number>(0);
     const [intervalId, setIntervalId] = useState<number>();
 

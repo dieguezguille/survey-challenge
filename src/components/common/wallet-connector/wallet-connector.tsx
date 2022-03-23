@@ -1,45 +1,38 @@
 import { ChangeCircle } from '@mui/icons-material';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
-import { useContext } from 'react';
 
-import { WalletContext } from '../../context/wallet.context';
+import useStringUtils from '../../../hooks/string-utils.hook';
+import useWallet from '../../../hooks/use-wallet.hook';
 import OnlineIndicator from '../online-indicator/online-indicator';
+
+const { REACT_APP_CHAIN_NAME } = process.env;
 
 const WalletConnector: React.FC = () => {
     const {
         isConnected,
-        connect,
-        disconnect,
-        address,
         isInvalidChain,
+        address,
         requestChainSwitch,
-    } = useContext(WalletContext);
+        switchConnection,
+    } = useWallet();
 
-    const handleConnect = () => {
-        !isConnected ? connect() : disconnect();
-    };
-
-    const handleChainSwitch = () => {
-        requestChainSwitch();
-    };
+    const { getDottedSubstring } = useStringUtils();
 
     return !isInvalidChain ? (
-        <Button onClick={handleConnect}>
+        <Button onClick={switchConnection}>
             <Stack direction="row" alignItems="center">
                 <OnlineIndicator isOnline={isConnected} />
                 <div>
                     {isConnected
-                        ? `${String(address).substring(0, 6)}...${String(
-                              address
-                          ).substring(38)}`
+                        ? getDottedSubstring(6, 38, address)
                         : 'Connect Wallet'}
                 </div>
             </Stack>
         </Button>
     ) : (
-        <Button startIcon={<ChangeCircle />} onClick={handleChainSwitch}>
-            Switch to Ropsten
+        <Button startIcon={<ChangeCircle />} onClick={requestChainSwitch}>
+            Switch to {REACT_APP_CHAIN_NAME}
         </Button>
     );
 };
