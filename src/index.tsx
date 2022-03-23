@@ -7,9 +7,9 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 
 import App from './App';
-import AppProvider from './components/context/app.context';
-import SurveyContractProvider from './components/context/survey-contract.context';
-import WalletProvider from './components/context/wallet.context';
+import AppProvider from './contexts/app.context';
+import SurveyContractProvider from './contexts/survey-contract.context';
+import WalletProvider from './contexts/wallet.context';
 import reportWebVitals from './reportWebVitals';
 import CustomTheme from './theme/custom.theme';
 

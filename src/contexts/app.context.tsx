@@ -5,8 +5,8 @@ import React, {
     useState,
 } from 'react';
 
-import { ISurvey, ISurveyQuestion } from '../../models/survey.model';
-import { ISurveyResult } from '../../models/survey-result.model';
+import { ISurvey, ISurveyQuestion } from '../models/survey.model';
+import { ISurveyResult } from '../models/survey-result.model';
 
 type AppContextType = {
     isLoading: boolean;
