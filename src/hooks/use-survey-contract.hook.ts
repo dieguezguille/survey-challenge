@@ -2,7 +2,7 @@ import { ContractTransaction, ethers } from 'ethers';
 import { useSnackbar } from 'notistack';
 import { useCallback, useContext, useEffect } from 'react';
 
-import contractAbi from '../abis/survey.json';
+import abi from '../abis/survey-contract.json';
 import { SurveyContractContext } from '../components/context/survey-contract.context';
 import { ITransferEvent } from '../models/transfer-event.model';
 import useApp from './use-app.hook';
@@ -25,7 +25,7 @@ const useSurveyContract = () => {
                 setContract(
                     await new ethers.Contract(
                         REACT_APP_CONTRACT_ADDRESS,
-                        contractAbi,
+                        abi,
                         provider?.getSigner()
                     )
                 );
