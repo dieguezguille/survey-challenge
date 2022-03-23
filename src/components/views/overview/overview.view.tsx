@@ -1,19 +1,14 @@
 import { Button, Paper, Typography } from '@mui/material';
 import Container from '@mui/material/Container';
 import Stack from '@mui/material/Stack';
-import { useContext } from 'react';
 
+import useApp from '../../../hooks/use-app.hook';
+import useSurveyContract from '../../../hooks/use-survey-contract.hook';
 import Balance from '../../common/balance/balance';
-import { AppContext } from '../../context/app.context';
-import { SurveyContext } from '../../context/survey.context';
 
 const OverviewView: React.FC = () => {
-    const { surveyResult } = useContext(AppContext);
-    const { survey, submitSurvey } = useContext(SurveyContext);
-
-    const handleSurveySubmit = () => {
-        submitSurvey();
-    };
+    const { survey, surveyResult } = useApp();
+    const { submitSurvey } = useSurveyContract();
 
     return (
         <Container>
@@ -45,7 +40,7 @@ const OverviewView: React.FC = () => {
                 <Button
                     variant="outlined"
                     color="inherit"
-                    onClick={handleSurveySubmit}
+                    onClick={submitSurvey}
                 >
                     Submit Survey
                 </Button>

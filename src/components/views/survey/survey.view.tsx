@@ -1,22 +1,20 @@
 import Container from '@mui/material/Container';
-import { useContext, useEffect } from 'react';
-import { useCallback } from 'react';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { RoutesEnum } from '../../../enums/routes.enum';
+import useApp from '../../../hooks/use-app.hook';
 import Question from '../../common/question/question';
-import { AppContext } from '../../context/app.context';
-import { SurveyContext } from '../../context/survey.context';
 
 const SurveyView: React.FC = () => {
     const navigate = useNavigate();
-    const { isSurveyStarted, isSurveyFinished, currentQuestion } =
-        useContext(AppContext);
-    const { startSurvey, getNextQuestion } = useContext(SurveyContext);
-
-    const handleNextQuestion = useCallback(() => {
-        getNextQuestion();
-    }, [getNextQuestion]);
+    const {
+        currentQuestion,
+        isSurveyStarted,
+        isSurveyFinished,
+        startSurvey,
+        getNextQuestion,
+    } = useApp();
 
     useEffect(() => {
         startSurvey();
@@ -24,12 +22,12 @@ const SurveyView: React.FC = () => {
 
     useEffect(() => {
         if (isSurveyStarted) {
-            handleNextQuestion();
+            getNextQuestion();
         }
-    }, [getNextQuestion, handleNextQuestion, isSurveyStarted]);
+    }, [getNextQuestion, isSurveyStarted]);
 
     useEffect(() => {
-        if (isSurveyFinished) navigate(RoutesEnum.OVERVIEW, { replace: true });
+        isSurveyFinished && navigate(RoutesEnum.OVERVIEW, { replace: true });
     });
 
     return (
@@ -37,7 +35,7 @@ const SurveyView: React.FC = () => {
             {currentQuestion && isSurveyStarted && (
                 <Question
                     question={currentQuestion}
-                    onNextQuestion={handleNextQuestion}
+                    onNextQuestion={getNextQuestion}
                 />
             )}
         </Container>

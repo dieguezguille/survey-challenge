@@ -5,7 +5,7 @@ import React, {
     useState,
 } from 'react';
 
-import { ISurveyQuestion } from '../../models/survey.model';
+import { ISurvey, ISurveyQuestion } from '../../models/survey.model';
 import { ISurveyResult } from '../../models/survey-result.model';
 
 type AppContextType = {
@@ -19,6 +19,8 @@ type AppContextType = {
     setIsSurveyFinished: Dispatch<SetStateAction<boolean>>;
     currentQuestion: ISurveyQuestion | undefined;
     setCurrentQuestion: Dispatch<SetStateAction<ISurveyQuestion | undefined>>;
+    survey: ISurvey | undefined;
+    setSurvey: Dispatch<React.SetStateAction<ISurvey | undefined>>;
 };
 
 const defaultValues: AppContextType = {
@@ -32,6 +34,8 @@ const defaultValues: AppContextType = {
     setIsSurveyFinished: () => {},
     currentQuestion: undefined,
     setCurrentQuestion: () => {},
+    survey: undefined,
+    setSurvey: () => {},
 };
 export const AppContext = createContext(defaultValues);
 
@@ -42,12 +46,16 @@ const AppContextProvider: React.FC = ({ children }) => {
     const [isSurveyStarted, setIsSurveyStarted] = useState<boolean>(
         defaultValues.isSurveyStarted
     );
+
+    const [survey, setSurvey] = useState<ISurvey | undefined>(undefined);
+
     const [surveyResult, setSurveyResult] = useState<ISurveyResult | undefined>(
         undefined
     );
     const [currentQuestion, setCurrentQuestion] = useState<
         ISurveyQuestion | undefined
     >(undefined);
+
     const [isSurveyFinished, setIsSurveyFinished] = useState<boolean>(false);
 
     const contextValue = {
@@ -61,6 +69,8 @@ const AppContextProvider: React.FC = ({ children }) => {
         setIsSurveyFinished,
         currentQuestion,
         setCurrentQuestion,
+        survey,
+        setSurvey,
     };
 
     return (
