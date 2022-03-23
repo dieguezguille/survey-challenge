@@ -9,10 +9,10 @@ import React, {
     useState,
 } from 'react';
 
-import { MetamaskCommands } from '../../enums/metamask-commands.enum';
-import { MetamaskEvents } from '../../enums/metamask-events.enum';
-import useMetamaskUtils from '../../hooks/metamask-utils.hook';
-import useApp from '../../hooks/use-app.hook';
+import { MetamaskCommands } from '../enums/metamask-commands.enum';
+import { MetamaskEvents } from '../enums/metamask-events.enum';
+import useMetamaskUtils from '../hooks/metamask-utils.hook';
+import useApp from '../hooks/use-app.hook';
 
 type WalletContextType = {
     isConnected: boolean;

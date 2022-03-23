@@ -3,7 +3,7 @@ import { useSnackbar } from 'notistack';
 import { useCallback, useContext, useEffect } from 'react';
 
 import abi from '../abis/survey-contract.json';
-import { SurveyContractContext } from '../components/context/survey-contract.context';
+import { SurveyContractContext } from '../contexts/survey-contract.context';
 import { ITransferEvent } from '../models/transfer-event.model';
 import useApp from './use-app.hook';
 import useWallet from './use-wallet.hook';

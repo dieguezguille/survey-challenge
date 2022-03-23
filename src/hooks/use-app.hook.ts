@@ -2,7 +2,7 @@ import { useSnackbar } from 'notistack';
 import { useCallback, useContext } from 'react';
 
 import { getSurvey } from '../adapters/survey.adapter';
-import { AppContext } from '../components/context/app.context';
+import { AppContext } from '../contexts/app.context';
 import { ISurvey } from '../models/survey.model';
 
 const useApp = () => {
