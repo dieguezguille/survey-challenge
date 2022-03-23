@@ -54,8 +54,7 @@ const AppProvider: React.FC = ({ children }) => {
     const getDailySurvey = useCallback(async () => {
         setIsLoading(true);
         try {
-            const dailySurvey: ISurvey = await getSurvey();
-            setSurvey(dailySurvey);
+            setSurvey(await getSurvey());
         } catch (error) {
             enqueueSnackbar(
                 'Failed to get daily survey. See console for details.',
