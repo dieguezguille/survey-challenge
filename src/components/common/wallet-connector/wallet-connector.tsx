@@ -2,6 +2,7 @@ import { ChangeCircle } from '@mui/icons-material';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 
+import useStringUtils from '../../../hooks/string-utils.hook';
 import useWallet from '../../../hooks/use-wallet.hook';
 import OnlineIndicator from '../online-indicator/online-indicator';
 
@@ -16,15 +17,15 @@ const WalletConnector: React.FC = () => {
         switchConnection,
     } = useWallet();
 
+    const { getDottedSubstring } = useStringUtils();
+
     return !isInvalidChain ? (
         <Button onClick={switchConnection}>
             <Stack direction="row" alignItems="center">
                 <OnlineIndicator isOnline={isConnected} />
                 <div>
                     {isConnected
-                        ? `${String(address).substring(0, 6)}...${String(
-                              address
-                          ).substring(38)}`
+                        ? getDottedSubstring(6, 38, address)
                         : 'Connect Wallet'}
                 </div>
             </Stack>
