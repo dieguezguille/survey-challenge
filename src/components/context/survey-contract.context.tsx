@@ -1,27 +1,27 @@
 import { Contract } from 'ethers';
 import React, { createContext, Dispatch, useMemo, useState } from 'react';
 
-type SurveyContextType = {
+type SurveyContractContextType = {
     balance: number;
     setBalance: Dispatch<React.SetStateAction<number>>;
     contract: Contract | undefined;
     setContract: Dispatch<React.SetStateAction<Contract | undefined>>;
 };
 
-const defaultValues: SurveyContextType = {
+const defaultValues: SurveyContractContextType = {
     balance: 0,
     setBalance: () => {},
     contract: undefined,
     setContract: () => {},
 };
 
-export const SurveyContext = createContext(defaultValues);
+export const SurveyContractContext = createContext(defaultValues);
 
-const SurveyContextProvider: React.FC = ({ children }) => {
+const SurveyContractProvider: React.FC = ({ children }) => {
     const [balance, setBalance] = useState<number>(defaultValues.balance);
     const [contract, setContract] = useState<Contract | undefined>(undefined);
 
-    const contextValue: SurveyContextType = useMemo(
+    const contextValue: SurveyContractContextType = useMemo(
         () => ({
             balance,
             setBalance,
@@ -32,10 +32,10 @@ const SurveyContextProvider: React.FC = ({ children }) => {
     );
 
     return (
-        <SurveyContext.Provider value={contextValue}>
+        <SurveyContractContext.Provider value={contextValue}>
             {children}
-        </SurveyContext.Provider>
+        </SurveyContractContext.Provider>
     );
 };
 
-export default SurveyContextProvider;
+export default SurveyContractProvider;

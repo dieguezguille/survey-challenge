@@ -6,6 +6,7 @@ import { AppContext } from '../components/context/app.context';
 import { ISurvey } from '../models/survey.model';
 
 const useApp = () => {
+    const { enqueueSnackbar } = useSnackbar();
     const {
         isLoading,
         setIsLoading,
@@ -20,7 +21,6 @@ const useApp = () => {
         surveyResult,
         setSurveyResult,
     } = useContext(AppContext);
-    const { enqueueSnackbar } = useSnackbar();
 
     const showLoader = () => {
         setIsLoading(true);

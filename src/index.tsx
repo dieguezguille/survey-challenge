@@ -7,9 +7,9 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 
 import App from './App';
-import AppContextProvider from './components/context/app.context';
-import SurveyContextProvider from './components/context/survey.context';
-import WalletContextProvider from './components/context/wallet.context';
+import AppProvider from './components/context/app.context';
+import SurveyContractProvider from './components/context/survey-contract.context';
+import WalletProvider from './components/context/wallet.context';
 import reportWebVitals from './reportWebVitals';
 import CustomTheme from './theme/custom.theme';
 
@@ -25,16 +25,16 @@ ReactDOM.render(
     <React.StrictMode>
         <ThemeProvider theme={CustomTheme}>
             <SnackbarProvider maxSnack={5}>
-                <AppContextProvider>
-                    <WalletContextProvider>
-                        <SurveyContextProvider>
+                <AppProvider>
+                    <WalletProvider>
+                        <SurveyContractProvider>
                             <BrowserRouter>
                                 <CssBaseline />
                                 <App />
                             </BrowserRouter>
-                        </SurveyContextProvider>
-                    </WalletContextProvider>
-                </AppContextProvider>
+                        </SurveyContractProvider>
+                    </WalletProvider>
+                </AppProvider>
             </SnackbarProvider>
         </ThemeProvider>
     </React.StrictMode>,

@@ -39,7 +39,7 @@ const defaultValues: AppContextType = {
 };
 export const AppContext = createContext(defaultValues);
 
-const AppContextProvider: React.FC = ({ children }) => {
+const AppProvider: React.FC = ({ children }) => {
     const [isLoading, setIsLoading] = useState<boolean>(
         defaultValues.isLoading
     );
@@ -80,4 +80,4 @@ const AppContextProvider: React.FC = ({ children }) => {
     );
 };
 
-export default AppContextProvider;
+export default AppProvider;

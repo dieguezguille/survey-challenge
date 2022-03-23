@@ -3,7 +3,7 @@ import { useSnackbar } from 'notistack';
 import { useCallback, useContext, useEffect } from 'react';
 
 import contractAbi from '../abis/survey.json';
-import { SurveyContext } from '../components/context/survey.context';
+import { SurveyContractContext } from '../components/context/survey-contract.context';
 import { ITransferEvent } from '../models/transfer-event.model';
 import useApp from './use-app.hook';
 import useWallet from './use-wallet.hook';
@@ -11,8 +11,9 @@ import useWallet from './use-wallet.hook';
 const { REACT_APP_CONTRACT_ADDRESS } = process.env;
 
 const useSurveyContract = () => {
-    const { balance, setBalance, contract, setContract } =
-        useContext(SurveyContext);
+    const { balance, setBalance, contract, setContract } = useContext(
+        SurveyContractContext
+    );
     const { showLoader, hideLoader, surveyResult } = useApp();
     const { address, provider } = useWallet();
     const { enqueueSnackbar } = useSnackbar();

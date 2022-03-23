@@ -53,7 +53,7 @@ const {
     REACT_APP_CHAIN_RPC_URL,
 } = process.env;
 
-const WalletContextProvider: React.FC = ({ children }) => {
+const WalletProvider: React.FC = ({ children }) => {
     const { showLoader, hideLoader } = useApp();
     const { isMetamaskError } = useMetamaskUtils();
     const { enqueueSnackbar } = useSnackbar();
@@ -268,4 +268,4 @@ const WalletContextProvider: React.FC = ({ children }) => {
     );
 };
 
-export default WalletContextProvider;
+export default WalletProvider;
