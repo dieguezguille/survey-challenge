@@ -5,7 +5,12 @@ type OnlineIndicatorProps = {
 };
 
 const OnlineIndicator: React.FC<OnlineIndicatorProps> = ({ isOnline }) => {
-    return <StyledOnlineIndicator isOnline={isOnline} />;
+    return (
+        <StyledOnlineIndicator
+            aria-label="online-indicator"
+            isOnline={isOnline}
+        />
+    );
 };
 
 export default OnlineIndicator;
