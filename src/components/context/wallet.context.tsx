@@ -5,7 +5,6 @@ import React, {
     Dispatch,
     SetStateAction,
     useCallback,
-    useContext,
     useEffect,
     useState,
 } from 'react';
@@ -13,7 +12,7 @@ import React, {
 import { MetamaskCommands } from '../../enums/metamask-commands.enum';
 import { MetamaskEvents } from '../../enums/metamask-events.enum';
 import useMetamaskUtils from '../../hooks/metamask-utils.hook';
-import { AppContext } from './app.context';
+import useApp from '../../hooks/use-app.hook';
 
 type WalletContextType = {
     isConnected: boolean;
@@ -55,9 +54,9 @@ const {
 } = process.env;
 
 const WalletContextProvider: React.FC = ({ children }) => {
-    const { enqueueSnackbar } = useSnackbar();
+    const { showLoader, hideLoader } = useApp();
     const { isMetamaskError } = useMetamaskUtils();
-    const { setIsLoading } = useContext(AppContext);
+    const { enqueueSnackbar } = useSnackbar();
 
     const [isConnected, setIsConnected] = useState<boolean>(
         defaultValues.isConnected
@@ -76,7 +75,7 @@ const WalletContextProvider: React.FC = ({ children }) => {
     );
 
     const disconnect = useCallback(() => {
-        setIsLoading(true);
+        showLoader;
         try {
             setIsConnected(false);
             setAddress(undefined);
@@ -86,12 +85,12 @@ const WalletContextProvider: React.FC = ({ children }) => {
                 variant: 'error',
             });
         } finally {
-            setIsLoading(false);
+            hideLoader();
         }
-    }, [enqueueSnackbar, setIsLoading]);
+    }, [enqueueSnackbar, hideLoader, showLoader]);
 
     const checkChain = useCallback(async () => {
-        setIsLoading(true);
+        showLoader();
         try {
             if (!provider) return;
             const network = await provider.getNetwork();
@@ -115,12 +114,12 @@ const WalletContextProvider: React.FC = ({ children }) => {
             );
             console.log(error);
         } finally {
-            setIsLoading(false);
+            hideLoader();
         }
-    }, [disconnect, enqueueSnackbar, provider, setIsLoading]);
+    }, [disconnect, enqueueSnackbar, hideLoader, provider, showLoader]);
 
     const requestChainSwitch = useCallback(async () => {
-        setIsLoading(true);
+        showLoader();
         try {
             await provider?.send(MetamaskCommands.SWITCH_CHAIN, [
                 {
@@ -148,12 +147,12 @@ const WalletContextProvider: React.FC = ({ children }) => {
                 console.log(error);
             }
         } finally {
-            setIsLoading(false);
+            hideLoader();
         }
-    }, [enqueueSnackbar, isMetamaskError, provider, setIsLoading]);
+    }, [enqueueSnackbar, hideLoader, isMetamaskError, provider, showLoader]);
 
     const connect = useCallback(async () => {
-        setIsLoading(true);
+        showLoader();
         try {
             if (provider) {
                 checkChain();
@@ -179,9 +178,9 @@ const WalletContextProvider: React.FC = ({ children }) => {
             });
             console.log(error);
         } finally {
-            setIsLoading(false);
+            hideLoader();
         }
-    }, [checkChain, enqueueSnackbar, provider, setIsLoading]);
+    }, [checkChain, enqueueSnackbar, hideLoader, provider, showLoader]);
 
     const contextValue = {
         isConnected,

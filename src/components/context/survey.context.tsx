@@ -11,6 +11,7 @@ import React, {
 
 import contractAbi from '../../abis/survey.json';
 import { getSurvey } from '../../adapters/survey.adapter';
+import useApp from '../../hooks/use-app.hook';
 import useWallet from '../../hooks/use-wallet.hook';
 import { ISurvey } from '../../models/survey.model';
 import { ITransferEvent } from '../../models/transfer-event.model';
@@ -42,7 +43,6 @@ const { REACT_APP_CONTRACT_ADDRESS } = process.env;
 
 const SurveyContextProvider: React.FC = ({ children }) => {
     const {
-        setIsLoading,
         surveyResult,
         setSurveyResult,
         setIsSurveyFinished,
@@ -50,6 +50,7 @@ const SurveyContextProvider: React.FC = ({ children }) => {
         setCurrentQuestion,
     } = useContext(AppContext);
 
+    const { showLoader, hideLoader } = useApp();
     const { address, provider } = useWallet();
     const { enqueueSnackbar } = useSnackbar();
 
@@ -58,7 +59,7 @@ const SurveyContextProvider: React.FC = ({ children }) => {
     const [survey, setSurvey] = useState<ISurvey | undefined>(undefined);
 
     const getBalance = useCallback(async () => {
-        setIsLoading(true);
+        showLoader();
         try {
             if (contract && address) {
                 const result = await contract.balanceOf(address);
@@ -74,9 +75,9 @@ const SurveyContextProvider: React.FC = ({ children }) => {
             );
             console.log(error);
         } finally {
-            setIsLoading(false);
+            hideLoader();
         }
-    }, [address, contract, enqueueSnackbar, setIsLoading]);
+    }, [address, contract, enqueueSnackbar, hideLoader, showLoader]);
 
     const handleTransactionReceipt = useCallback(
         async (transactionReceipt: ethers.ContractReceipt) => {
@@ -111,7 +112,7 @@ const SurveyContextProvider: React.FC = ({ children }) => {
     );
 
     const submitSurvey = useCallback(async () => {
-        setIsLoading(true);
+        showLoader();
         try {
             if (contract && surveyResult) {
                 const transaction: ContractTransaction = await contract.submit(
@@ -130,14 +131,15 @@ const SurveyContextProvider: React.FC = ({ children }) => {
             );
             console.log(error);
         } finally {
-            setIsLoading(false);
+            hideLoader();
         }
     }, [
-        setIsLoading,
+        showLoader,
         contract,
         surveyResult,
         handleTransactionReceipt,
         enqueueSnackbar,
+        hideLoader,
     ]);
 
     const saveAnswer = useCallback(
@@ -156,7 +158,7 @@ const SurveyContextProvider: React.FC = ({ children }) => {
     );
 
     const getNextQuestion = useCallback(() => {
-        setIsLoading(true);
+        showLoader();
         try {
             if (survey) {
                 setCurrentQuestion((previousQuestion) => {
@@ -181,18 +183,19 @@ const SurveyContextProvider: React.FC = ({ children }) => {
             );
             console.log(error);
         } finally {
-            setIsLoading(false);
+            hideLoader();
         }
     }, [
         enqueueSnackbar,
+        hideLoader,
         setCurrentQuestion,
-        setIsLoading,
         setIsSurveyFinished,
+        showLoader,
         survey,
     ]);
 
     const getDailySurvey = useCallback(async () => {
-        setIsLoading(true);
+        showLoader();
         try {
             const result: ISurvey = await getSurvey();
             setSurvey(result);
@@ -205,16 +208,16 @@ const SurveyContextProvider: React.FC = ({ children }) => {
             );
             console.log(error);
         } finally {
-            setIsLoading(false);
+            hideLoader();
         }
-    }, [enqueueSnackbar, setIsLoading]);
+    }, [enqueueSnackbar, hideLoader, showLoader]);
 
     const startSurvey = useCallback(() => {
         setIsSurveyStarted(true);
     }, [setIsSurveyStarted]);
 
     const loadContract = useCallback(async () => {
-        setIsLoading(true);
+        showLoader();
         try {
             if (REACT_APP_CONTRACT_ADDRESS) {
                 setContract(
@@ -238,9 +241,9 @@ const SurveyContextProvider: React.FC = ({ children }) => {
             );
             console.log(error);
         } finally {
-            setIsLoading(false);
+            hideLoader();
         }
-    }, [enqueueSnackbar, provider, setIsLoading]);
+    }, [enqueueSnackbar, hideLoader, provider, showLoader]);
 
     useEffect(() => {
         if (!contract) {
