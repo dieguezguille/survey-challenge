@@ -15,7 +15,7 @@ import { MetamaskEvents } from '../enums/metamask-events.enum';
 import metamaskUtils from '../utils/metamask-utils';
 import { AppContext } from './app.context';
 
-type WalletContextType = {
+export type WalletContextType = {
     isConnected: boolean;
     setIsConnected: Dispatch<SetStateAction<boolean>>;
     address: string | undefined;
