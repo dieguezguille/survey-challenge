@@ -153,6 +153,7 @@ const WalletProvider: React.FC = ({ children }) => {
     }, [enqueueSnackbar, isMetamaskError, provider, setIsLoading]);
 
     const connect = useCallback(async () => {
+        console.log('connecting');
         setIsLoading(true);
         try {
             if (provider) {
@@ -168,10 +169,6 @@ const WalletProvider: React.FC = ({ children }) => {
                         variant: 'info',
                     });
                 }
-            } else {
-                enqueueSnackbar('No Ethereum provider detected.', {
-                    variant: 'error',
-                });
             }
         } catch (error) {
             enqueueSnackbar('Unable to connect to Metamask.', {
@@ -196,12 +193,6 @@ const WalletProvider: React.FC = ({ children }) => {
         connect,
         disconnect,
     };
-
-    useEffect(() => {
-        if (provider) {
-            connect();
-        }
-    }, [connect, provider]);
 
     useEffect(() => {
         if (window.ethereum && !provider) {
