@@ -50,6 +50,12 @@ These instructions will get you a copy of the project up and running on your loc
 $ yarn
 ```
 
+4 . (Optional) Run existent tests with:
+
+```
+$ yarn test
+```
+
 3 . Run the development server with:
 
 ```
@@ -106,8 +112,8 @@ Here are some screenshots of the app working. You can tell about the project str
 
 Here is a list with some improvements that could make both the user and developer experience better:
 
-1 . Write some tests with React Testing Library and Jest to avoid unwanted state mutations and ensure a proper user flow.
+1 . Write the rest of the missing tests to help avoid unwanted state mutations and ensure a proper user flow.
 
-2 . Extract re-usable logic from contexts and common components into custom hooks.
+2 . Extract re-usable logic from contexts and common components into custom hooks if deemed necessary.
 
-3 . Improve error handling by typing and capturing Ethers.js errors such as replaced transactions, failed transactions, reverted transactions and transactions rejected by the user.
+3 . Improve error handling by typing and capturing Ethers.js errors such as replaced transactions, failed transactions, reverted transactions and transactions rejected by the user. Enumerate these in an enum structure or object of some sort.
