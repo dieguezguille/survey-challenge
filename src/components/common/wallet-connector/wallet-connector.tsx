@@ -5,6 +5,8 @@ import Stack from '@mui/material/Stack';
 import useWallet from '../../../hooks/use-wallet.hook';
 import OnlineIndicator from '../online-indicator/online-indicator';
 
+const { REACT_APP_CHAIN_NAME } = process.env;
+
 const WalletConnector: React.FC = () => {
     const {
         isConnected,
@@ -29,7 +31,7 @@ const WalletConnector: React.FC = () => {
         </Button>
     ) : (
         <Button startIcon={<ChangeCircle />} onClick={requestChainSwitch}>
-            Switch to Ropsten
+            Switch to {REACT_APP_CHAIN_NAME}
         </Button>
     );
 };
