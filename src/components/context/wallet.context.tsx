@@ -197,6 +197,12 @@ const WalletProvider: React.FC = ({ children }) => {
     };
 
     useEffect(() => {
+        if (provider) {
+            connect();
+        }
+    }, [connect, provider]);
+
+    useEffect(() => {
         if (window.ethereum && !provider) {
             setProvider(new ethers.providers.Web3Provider(window.ethereum));
         }

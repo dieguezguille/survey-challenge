@@ -10,12 +10,14 @@ import Balance from '../../common/balance/balance';
 import { SurveyImageWrapper } from '../../styled/survey-image-wrapper/survey-image-wrapper';
 
 const MainView: React.FC = () => {
-    const { getDailySurvey, survey } = useApp();
+    const { survey, getDailySurvey } = useApp();
     const navigate = useNavigate();
 
     useEffect(() => {
-        getDailySurvey();
-    }, [getDailySurvey]);
+        if (!survey) {
+            getDailySurvey();
+        }
+    }, [getDailySurvey, survey]);
 
     return (
         <Container>

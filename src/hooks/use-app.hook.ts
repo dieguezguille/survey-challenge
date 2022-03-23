@@ -1,5 +1,5 @@
 import { useSnackbar } from 'notistack';
-import { useContext } from 'react';
+import { useCallback, useContext } from 'react';
 
 import { getSurvey } from '../adapters/survey.adapter';
 import { AppContext } from '../components/context/app.context';
@@ -22,23 +22,23 @@ const useApp = () => {
         setSurveyResult,
     } = useContext(AppContext);
 
-    const showLoader = () => {
+    const showLoader = useCallback(() => {
         setIsLoading(true);
-    };
+    }, [setIsLoading]);
 
-    const hideLoader = () => {
+    const hideLoader = useCallback(() => {
         setIsLoading(false);
-    };
+    }, [setIsLoading]);
 
-    const startSurvey = () => {
+    const startSurvey = useCallback(() => {
         setIsSurveyStarted(true);
-    };
+    }, [setIsSurveyStarted]);
 
-    const endSurvey = () => {
+    const endSurvey = useCallback(() => {
         setIsSurveyFinished(true);
-    };
+    }, [setIsSurveyFinished]);
 
-    const getDailySurvey = async () => {
+    const getDailySurvey = useCallback(async () => {
         showLoader();
         try {
             const dailySurvey: ISurvey = await getSurvey();
@@ -54,21 +54,24 @@ const useApp = () => {
         } finally {
             hideLoader();
         }
-    };
+    }, [enqueueSnackbar, hideLoader, setSurvey, showLoader]);
 
-    const saveAnswer = (surveyId: number, answerId: number) => {
-        setSurveyResult((previousState) => {
-            if (!previousState) {
-                return { surveyId: surveyId, answerIds: [answerId] };
-            }
-            return {
-                ...previousState,
-                answerIds: [...previousState.answerIds, answerId],
-            };
-        });
-    };
+    const saveAnswer = useCallback(
+        (surveyId: number, answerId: number) => {
+            setSurveyResult((previousState) => {
+                if (!previousState) {
+                    return { surveyId: surveyId, answerIds: [answerId] };
+                }
+                return {
+                    ...previousState,
+                    answerIds: [...previousState.answerIds, answerId],
+                };
+            });
+        },
+        [setSurveyResult]
+    );
 
-    const getNextQuestion = () => {
+    const getNextQuestion = useCallback(() => {
         showLoader();
         try {
             if (survey) {
@@ -96,7 +99,14 @@ const useApp = () => {
         } finally {
             hideLoader();
         }
-    };
+    }, [
+        endSurvey,
+        enqueueSnackbar,
+        hideLoader,
+        setCurrentQuestion,
+        showLoader,
+        survey,
+    ]);
 
     return {
         isLoading,

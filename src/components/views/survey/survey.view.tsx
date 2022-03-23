@@ -8,31 +8,21 @@ import Question from '../../common/question/question';
 
 const SurveyView: React.FC = () => {
     const navigate = useNavigate();
-    const {
-        currentQuestion,
-        isSurveyStarted,
-        isSurveyFinished,
-        startSurvey,
-        getNextQuestion,
-    } = useApp();
+    const { currentQuestion, isSurveyFinished, getNextQuestion } = useApp();
 
     useEffect(() => {
-        startSurvey();
-    }, [startSurvey]);
+        getNextQuestion();
+    }, [getNextQuestion]);
 
     useEffect(() => {
-        if (isSurveyStarted) {
-            getNextQuestion();
+        if (isSurveyFinished) {
+            navigate(RoutesEnum.OVERVIEW, { replace: true });
         }
-    }, [getNextQuestion, isSurveyStarted]);
-
-    useEffect(() => {
-        isSurveyFinished && navigate(RoutesEnum.OVERVIEW, { replace: true });
     });
 
     return (
         <Container>
-            {currentQuestion && isSurveyStarted && (
+            {currentQuestion && (
                 <Question
                     question={currentQuestion}
                     onNextQuestion={getNextQuestion}
