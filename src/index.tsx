@@ -13,8 +13,10 @@ import WalletContextProvider from './components/context/wallet.context';
 import reportWebVitals from './reportWebVitals';
 import CustomTheme from './theme/custom.theme';
 
+const { REACT_APP_SENTRY_DSN } = process.env;
+
 Sentry.init({
-    dsn: 'https://0390e057839243bfbbb20e59d25ec956@o1175235.ingest.sentry.io/6272006',
+    dsn: REACT_APP_SENTRY_DSN,
     integrations: [new BrowserTracing()],
     tracesSampleRate: 1.0,
 });
