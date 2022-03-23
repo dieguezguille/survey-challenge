@@ -4,10 +4,12 @@ import Stack from '@mui/material/Stack';
 import { useContext } from 'react';
 
 import Balance from '../../common/balance/balance';
+import { AppContext } from '../../context/app.context';
 import { SurveyContext } from '../../context/survey.context';
 
 const OverviewView: React.FC = () => {
-    const { survey, surveyResult, submitSurvey } = useContext(SurveyContext);
+    const { surveyResult } = useContext(AppContext);
+    const { survey, submitSurvey } = useContext(SurveyContext);
 
     const handleSurveySubmit = () => {
         submitSurvey();

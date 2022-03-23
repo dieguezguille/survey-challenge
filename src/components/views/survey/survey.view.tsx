@@ -5,17 +5,14 @@ import { useNavigate } from 'react-router-dom';
 
 import { RoutesEnum } from '../../../enums/routes.enum';
 import Question from '../../common/question/question';
+import { AppContext } from '../../context/app.context';
 import { SurveyContext } from '../../context/survey.context';
 
 const SurveyView: React.FC = () => {
     const navigate = useNavigate();
-    const {
-        startSurvey,
-        isSurveyStarted,
-        isSurveyFinished,
-        currentQuestion,
-        getNextQuestion,
-    } = useContext(SurveyContext);
+    const { isSurveyStarted, isSurveyFinished, currentQuestion } =
+        useContext(AppContext);
+    const { startSurvey, getNextQuestion } = useContext(SurveyContext);
 
     const handleNextQuestion = useCallback(() => {
         getNextQuestion();

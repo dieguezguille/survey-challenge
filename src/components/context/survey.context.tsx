@@ -11,8 +11,7 @@ import React, {
 
 import contractAbi from '../../abis/survey.json';
 import { getSurvey } from '../../adapters/survey.adapter';
-import { ISurvey, ISurveyQuestion } from '../../models/survey.model';
-import { ISurveyResult } from '../../models/survey-result.model';
+import { ISurvey } from '../../models/survey.model';
 import { ITransferEvent } from '../../models/transfer-event.model';
 import { AppContext } from './app.context';
 import { WalletContext } from './wallet.context';
@@ -21,12 +20,8 @@ type SurveyContextType = {
     balance: number;
     survey: ISurvey | undefined;
     getDailySurvey: () => Promise<void>;
-    isSurveyStarted: boolean;
-    isSurveyFinished: boolean;
     startSurvey: () => void;
-    currentQuestion: ISurveyQuestion | undefined;
     getNextQuestion: () => void;
-    surveyResult: ISurveyResult | undefined;
     saveAnswer: (surveyId: number, answerId: number) => void;
     submitSurvey: () => void;
 };
@@ -35,12 +30,8 @@ const defaultValues: SurveyContextType = {
     balance: 0,
     survey: undefined,
     getDailySurvey: async () => {},
-    isSurveyStarted: false,
-    isSurveyFinished: false,
     startSurvey: () => {},
-    currentQuestion: undefined,
     getNextQuestion: () => {},
-    surveyResult: undefined,
     saveAnswer: () => {},
     submitSurvey: () => {},
 };
@@ -50,23 +41,20 @@ export const SurveyContext = createContext(defaultValues);
 const { REACT_APP_CONTRACT_ADDRESS } = process.env;
 
 const SurveyContextProvider: React.FC = ({ children }) => {
-    const { setIsLoading } = useContext(AppContext);
+    const {
+        setIsLoading,
+        surveyResult,
+        setSurveyResult,
+        setIsSurveyFinished,
+        setIsSurveyStarted,
+        setCurrentQuestion,
+    } = useContext(AppContext);
     const { enqueueSnackbar } = useSnackbar();
     const { address, provider } = useContext(WalletContext);
 
     const [balance, setBalance] = useState<number>(defaultValues.balance);
     const [contract, setContract] = useState<Contract | undefined>(undefined);
     const [survey, setSurvey] = useState<ISurvey | undefined>(undefined);
-    const [isSurveyStarted, setIsSurveyStarted] = useState<boolean>(
-        defaultValues.isSurveyStarted
-    );
-    const [isSurveyFinished, setIsSurveyFinished] = useState<boolean>(false);
-    const [currentQuestion, setCurrentQuestion] = useState<
-        ISurveyQuestion | undefined
-    >(undefined);
-    const [surveyResult, setSurveyResult] = useState<ISurveyResult | undefined>(
-        undefined
-    );
 
     const getBalance = useCallback(async () => {
         setIsLoading(true);
@@ -151,17 +139,20 @@ const SurveyContextProvider: React.FC = ({ children }) => {
         enqueueSnackbar,
     ]);
 
-    const saveAnswer = useCallback((surveyId: number, answerId: number) => {
-        setSurveyResult((previousState) => {
-            if (!previousState) {
-                return { surveyId: surveyId, answerIds: [answerId] };
-            }
-            return {
-                ...previousState,
-                answerIds: [...previousState.answerIds, answerId],
-            };
-        });
-    }, []);
+    const saveAnswer = useCallback(
+        (surveyId: number, answerId: number) => {
+            setSurveyResult((previousState) => {
+                if (!previousState) {
+                    return { surveyId: surveyId, answerIds: [answerId] };
+                }
+                return {
+                    ...previousState,
+                    answerIds: [...previousState.answerIds, answerId],
+                };
+            });
+        },
+        [setSurveyResult]
+    );
 
     const getNextQuestion = useCallback(() => {
         setIsLoading(true);
@@ -191,7 +182,13 @@ const SurveyContextProvider: React.FC = ({ children }) => {
         } finally {
             setIsLoading(false);
         }
-    }, [enqueueSnackbar, setIsLoading, survey]);
+    }, [
+        enqueueSnackbar,
+        setCurrentQuestion,
+        setIsLoading,
+        setIsSurveyFinished,
+        survey,
+    ]);
 
     const getDailySurvey = useCallback(async () => {
         setIsLoading(true);
@@ -211,9 +208,9 @@ const SurveyContextProvider: React.FC = ({ children }) => {
         }
     }, [enqueueSnackbar, setIsLoading]);
 
-    const startSurvey = () => {
+    const startSurvey = useCallback(() => {
         setIsSurveyStarted(true);
-    };
+    }, [setIsSurveyStarted]);
 
     const loadContract = useCallback(async () => {
         setIsLoading(true);
@@ -265,10 +262,7 @@ const SurveyContextProvider: React.FC = ({ children }) => {
             contract,
             survey,
             getDailySurvey,
-            isSurveyStarted,
-            isSurveyFinished,
             startSurvey,
-            currentQuestion,
             getNextQuestion,
             saveAnswer,
             surveyResult,
@@ -279,9 +273,7 @@ const SurveyContextProvider: React.FC = ({ children }) => {
             contract,
             survey,
             getDailySurvey,
-            isSurveyStarted,
-            isSurveyFinished,
-            currentQuestion,
+            startSurvey,
             getNextQuestion,
             saveAnswer,
             surveyResult,
