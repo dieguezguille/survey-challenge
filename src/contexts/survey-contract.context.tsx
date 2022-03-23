@@ -6,12 +6,10 @@ import React, {
     useCallback,
     useContext,
     useEffect,
-    useMemo,
     useState,
 } from 'react';
 
 import abi from '../abis/survey-contract.json';
-import useAppLoader from '../hooks/use-app-loader.hook';
 import { ITransferEvent } from '../models/transfer-event.model';
 import { AppContext } from './app.context';
 import { WalletContext } from './wallet.context';
@@ -37,17 +35,15 @@ export const SurveyContractContext = createContext(defaultValues);
 const { REACT_APP_CONTRACT_ADDRESS } = process.env;
 
 const SurveyContractProvider: React.FC = ({ children }) => {
+    const { surveyResult, setIsLoading } = useContext(AppContext);
     const { address, provider } = useContext(WalletContext);
-    const { surveyResult } = useContext(AppContext);
-
-    const { showLoader, hideLoader } = useAppLoader();
     const { enqueueSnackbar } = useSnackbar();
 
     const [balance, setBalance] = useState<number>(defaultValues.balance);
     const [contract, setContract] = useState<Contract | undefined>(undefined);
 
     const loadContract = useCallback(async () => {
-        showLoader();
+        setIsLoading(true);
         try {
             if (REACT_APP_CONTRACT_ADDRESS) {
                 setContract(
@@ -71,12 +67,12 @@ const SurveyContractProvider: React.FC = ({ children }) => {
             );
             console.log(error);
         } finally {
-            hideLoader();
+            setIsLoading(false);
         }
-    }, [enqueueSnackbar, hideLoader, provider, showLoader]);
+    }, [enqueueSnackbar, provider, setIsLoading]);
 
     const getBalance = useCallback(async () => {
-        showLoader();
+        setIsLoading(true);
         try {
             if (contract && address) {
                 const result = await contract.balanceOf(address);
@@ -92,9 +88,9 @@ const SurveyContractProvider: React.FC = ({ children }) => {
             );
             console.log(error);
         } finally {
-            hideLoader();
+            setIsLoading(false);
         }
-    }, [address, contract, enqueueSnackbar, hideLoader, showLoader]);
+    }, [address, contract, enqueueSnackbar, setIsLoading]);
 
     const handleTransactionReceipt = useCallback(
         async (transactionReceipt: ethers.ContractReceipt) => {
@@ -129,7 +125,7 @@ const SurveyContractProvider: React.FC = ({ children }) => {
     );
 
     const submitSurvey = useCallback(async () => {
-        showLoader();
+        setIsLoading(true);
         try {
             if (contract && surveyResult) {
                 const transaction: ContractTransaction = await contract.submit(
@@ -148,27 +144,23 @@ const SurveyContractProvider: React.FC = ({ children }) => {
             );
             console.log(error);
         } finally {
-            hideLoader();
+            setIsLoading(false);
         }
     }, [
         contract,
         enqueueSnackbar,
         handleTransactionReceipt,
-        hideLoader,
-        showLoader,
+        setIsLoading,
         surveyResult,
     ]);
 
-    const contextValue = useMemo(
-        () => ({
-            balance,
-            setBalance,
-            contract,
-            setContract,
-            submitSurvey,
-        }),
-        [balance, contract, submitSurvey]
-    );
+    const contextValue = {
+        balance,
+        setBalance,
+        contract,
+        setContract,
+        submitSurvey,
+    };
 
     useEffect(() => {
         if (!contract) {

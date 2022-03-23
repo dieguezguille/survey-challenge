@@ -4,12 +4,10 @@ import React, {
     Dispatch,
     SetStateAction,
     useCallback,
-    useMemo,
     useState,
 } from 'react';
 
 import { getSurvey } from '../adapters/survey.adapter';
-import useAppLoader from '../hooks/use-app-loader.hook';
 import { ISurvey, ISurveyQuestion } from '../models/survey.model';
 import { ISurveyResult } from '../models/survey-result.model';
 
@@ -40,7 +38,6 @@ export const AppContext = createContext(defaultValues);
 
 const AppProvider: React.FC = ({ children }) => {
     const { enqueueSnackbar } = useSnackbar();
-    const { showLoader, hideLoader } = useAppLoader();
 
     const [isLoading, setIsLoading] = useState<boolean>(
         defaultValues.isLoading
@@ -55,7 +52,7 @@ const AppProvider: React.FC = ({ children }) => {
     const [isSurveyFinished, setIsSurveyFinished] = useState<boolean>(false);
 
     const getDailySurvey = useCallback(async () => {
-        showLoader();
+        setIsLoading(true);
         try {
             const dailySurvey: ISurvey = await getSurvey();
             setSurvey(dailySurvey);
@@ -68,11 +65,11 @@ const AppProvider: React.FC = ({ children }) => {
             );
             console.log(error);
         } finally {
-            hideLoader();
+            setIsLoading(false);
         }
-    }, [enqueueSnackbar, hideLoader, showLoader]);
+    }, [enqueueSnackbar]);
 
-    const saveAnswer = (surveyId: number, answerId: number) => {
+    const saveAnswer = useCallback((surveyId: number, answerId: number) => {
         setSurveyResult((previousState) => {
             if (!previousState) {
                 return { surveyId: surveyId, answerIds: [answerId] };
@@ -82,10 +79,10 @@ const AppProvider: React.FC = ({ children }) => {
                 answerIds: [...previousState.answerIds, answerId],
             };
         });
-    };
+    }, []);
 
     const getNextQuestion = useCallback(() => {
-        showLoader();
+        setIsLoading(true);
         try {
             if (survey) {
                 setCurrentQuestion((previousQuestion) => {
@@ -110,32 +107,21 @@ const AppProvider: React.FC = ({ children }) => {
             );
             console.log(error);
         } finally {
-            hideLoader();
+            setIsLoading(false);
         }
-    }, [enqueueSnackbar, hideLoader, showLoader, survey]);
+    }, [enqueueSnackbar, survey]);
 
-    const contextValue: AppContextType = useMemo(
-        () => ({
-            isLoading,
-            setIsLoading,
-            surveyResult,
-            isSurveyFinished,
-            currentQuestion,
-            survey,
-            getDailySurvey,
-            getNextQuestion,
-            saveAnswer,
-        }),
-        [
-            currentQuestion,
-            getDailySurvey,
-            getNextQuestion,
-            isLoading,
-            isSurveyFinished,
-            survey,
-            surveyResult,
-        ]
-    );
+    const contextValue: AppContextType = {
+        isLoading,
+        setIsLoading,
+        surveyResult,
+        isSurveyFinished,
+        currentQuestion,
+        survey,
+        getDailySurvey,
+        getNextQuestion,
+        saveAnswer,
+    };
 
     return (
         <AppContext.Provider value={contextValue}>

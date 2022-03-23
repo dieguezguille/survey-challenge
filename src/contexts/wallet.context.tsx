@@ -5,15 +5,15 @@ import React, {
     Dispatch,
     SetStateAction,
     useCallback,
+    useContext,
     useEffect,
-    useMemo,
     useState,
 } from 'react';
 
 import { MetamaskCommands } from '../enums/metamask-commands.enum';
 import { MetamaskEvents } from '../enums/metamask-events.enum';
-import useAppLoader from '../hooks/use-app-loader.hook';
 import metamaskUtils from '../utils/metamask-utils';
+import { AppContext } from './app.context';
 
 type WalletContextType = {
     isConnected: boolean;
@@ -55,7 +55,7 @@ const {
 } = process.env;
 
 const WalletProvider: React.FC = ({ children }) => {
-    const { showLoader, hideLoader } = useAppLoader();
+    const { setIsLoading } = useContext(AppContext);
     const { isMetamaskError } = metamaskUtils();
     const { enqueueSnackbar } = useSnackbar();
 
@@ -76,7 +76,7 @@ const WalletProvider: React.FC = ({ children }) => {
     );
 
     const disconnect = useCallback(() => {
-        showLoader;
+        setIsLoading(true);
         try {
             setIsConnected(false);
             setAddress(undefined);
@@ -86,12 +86,12 @@ const WalletProvider: React.FC = ({ children }) => {
                 variant: 'error',
             });
         } finally {
-            hideLoader();
+            setIsLoading(false);
         }
-    }, [enqueueSnackbar, hideLoader, showLoader]);
+    }, [enqueueSnackbar, setIsLoading]);
 
     const checkChain = useCallback(async () => {
-        showLoader();
+        setIsLoading(true);
         try {
             if (!provider) return;
             const network = await provider.getNetwork();
@@ -115,12 +115,12 @@ const WalletProvider: React.FC = ({ children }) => {
             );
             console.log(error);
         } finally {
-            hideLoader();
+            setIsLoading(false);
         }
-    }, [disconnect, enqueueSnackbar, hideLoader, provider, showLoader]);
+    }, [disconnect, enqueueSnackbar, provider, setIsLoading]);
 
     const requestChainSwitch = useCallback(async () => {
-        showLoader();
+        setIsLoading(true);
         try {
             await provider?.send(MetamaskCommands.SWITCH_CHAIN, [
                 {
@@ -148,12 +148,12 @@ const WalletProvider: React.FC = ({ children }) => {
                 console.log(error);
             }
         } finally {
-            hideLoader();
+            setIsLoading(false);
         }
-    }, [enqueueSnackbar, hideLoader, isMetamaskError, provider, showLoader]);
+    }, [enqueueSnackbar, isMetamaskError, provider, setIsLoading]);
 
     const connect = useCallback(async () => {
-        showLoader();
+        setIsLoading(true);
         try {
             if (provider) {
                 checkChain();
@@ -179,34 +179,23 @@ const WalletProvider: React.FC = ({ children }) => {
             });
             console.log(error);
         } finally {
-            hideLoader();
+            setIsLoading(false);
         }
-    }, [checkChain, enqueueSnackbar, hideLoader, provider, showLoader]);
+    }, [checkChain, enqueueSnackbar, provider, setIsLoading]);
 
-    const contextValue = useMemo(
-        () => ({
-            isConnected,
-            setIsConnected,
-            address,
-            setAddress,
-            provider,
-            setProvider,
-            isInvalidChain,
-            setIsInvalidChain,
-            requestChainSwitch,
-            connect,
-            disconnect,
-        }),
-        [
-            address,
-            connect,
-            disconnect,
-            isConnected,
-            isInvalidChain,
-            provider,
-            requestChainSwitch,
-        ]
-    );
+    const contextValue = {
+        isConnected,
+        setIsConnected,
+        address,
+        setAddress,
+        provider,
+        setProvider,
+        isInvalidChain,
+        setIsInvalidChain,
+        requestChainSwitch,
+        connect,
+        disconnect,
+    };
 
     useEffect(() => {
         if (provider) {
