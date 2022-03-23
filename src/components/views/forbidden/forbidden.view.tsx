@@ -1,13 +1,13 @@
 import Container from '@mui/material/Container';
 import Stack from '@mui/material/Stack';
-import { useContext, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { RoutesEnum } from '../../../enums/routes.enum';
-import { WalletContext } from '../../context/wallet.context';
+import useWallet from '../../../hooks/use-wallet.hook';
 
 const ForbiddenView: React.FC = () => {
-    const { isConnected, isInvalidChain } = useContext(WalletContext);
+    const { isConnected, isInvalidChain } = useWallet();
     const navigate = useNavigate();
 
     useEffect(() => {

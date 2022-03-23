@@ -11,10 +11,10 @@ import React, {
 
 import contractAbi from '../../abis/survey.json';
 import { getSurvey } from '../../adapters/survey.adapter';
+import useWallet from '../../hooks/use-wallet.hook';
 import { ISurvey } from '../../models/survey.model';
 import { ITransferEvent } from '../../models/transfer-event.model';
 import { AppContext } from './app.context';
-import { WalletContext } from './wallet.context';
 
 type SurveyContextType = {
     balance: number;
@@ -49,8 +49,9 @@ const SurveyContextProvider: React.FC = ({ children }) => {
         setIsSurveyStarted,
         setCurrentQuestion,
     } = useContext(AppContext);
+
+    const { address, provider } = useWallet();
     const { enqueueSnackbar } = useSnackbar();
-    const { address, provider } = useContext(WalletContext);
 
     const [balance, setBalance] = useState<number>(defaultValues.balance);
     const [contract, setContract] = useState<Contract | undefined>(undefined);
