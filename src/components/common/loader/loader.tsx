@@ -1,10 +1,11 @@
 import CircularProgress from '@mui/material/CircularProgress';
+import { useContext } from 'react';
 
-import useApp from '../../../hooks/use-app.hook';
+import { AppContext } from '../../../contexts/app.context';
 import { StyledBackdrop } from './loader.styles';
 
 const Loader: React.FC = () => {
-    const { isLoading } = useApp();
+    const { isLoading } = useContext(AppContext);
 
     return (
         <StyledBackdrop open={isLoading}>

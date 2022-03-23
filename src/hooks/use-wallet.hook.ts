@@ -3,30 +3,13 @@ import { useContext } from 'react';
 import { WalletContext } from '../contexts/wallet.context';
 
 const useWallet = () => {
-    const {
-        isConnected,
-        isInvalidChain,
-        requestChainSwitch,
-        connect,
-        disconnect,
-        address,
-        provider,
-    } = useContext(WalletContext);
+    const { isConnected, connect, disconnect } = useContext(WalletContext);
 
     const switchConnection = () => {
         !isConnected ? connect() : disconnect();
     };
 
-    return {
-        isConnected,
-        isInvalidChain,
-        requestChainSwitch,
-        switchConnection,
-        connect,
-        disconnect,
-        address,
-        provider,
-    };
+    return { switchConnection };
 };
 
 export default useWallet;

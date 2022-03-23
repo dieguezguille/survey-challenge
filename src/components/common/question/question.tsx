@@ -3,9 +3,9 @@ import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Image from 'mui-image';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 
-import useApp from '../../../hooks/use-app.hook';
+import { AppContext } from '../../../contexts/app.context';
 import { ISurveyQuestion } from '../../../models/survey.model';
 import { CenteredStack } from '../../styled/centered-stack/centered-stack';
 import { SurveyImageWrapper } from '../../styled/survey-image-wrapper/survey-image-wrapper';
@@ -22,7 +22,7 @@ type QuestionProps = {
 };
 
 const Question: React.FC<QuestionProps> = ({ question, onNextQuestion }) => {
-    const { saveAnswer } = useApp();
+    const { saveAnswer } = useContext(AppContext);
 
     const [remainingTime, setRemainingTime] = useState<number>(
         question.lifetimeSeconds
