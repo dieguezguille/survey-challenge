@@ -6,6 +6,7 @@ import React, {
     SetStateAction,
     useCallback,
     useEffect,
+    useMemo,
     useState,
 } from 'react';
 
@@ -182,19 +183,30 @@ const WalletProvider: React.FC = ({ children }) => {
         }
     }, [checkChain, enqueueSnackbar, hideLoader, provider, showLoader]);
 
-    const contextValue = {
-        isConnected,
-        setIsConnected,
-        address,
-        setAddress,
-        provider,
-        setProvider,
-        isInvalidChain,
-        setIsInvalidChain,
-        requestChainSwitch,
-        connect,
-        disconnect,
-    };
+    const contextValue = useMemo(
+        () => ({
+            isConnected,
+            setIsConnected,
+            address,
+            setAddress,
+            provider,
+            setProvider,
+            isInvalidChain,
+            setIsInvalidChain,
+            requestChainSwitch,
+            connect,
+            disconnect,
+        }),
+        [
+            address,
+            connect,
+            disconnect,
+            isConnected,
+            isInvalidChain,
+            provider,
+            requestChainSwitch,
+        ]
+    );
 
     useEffect(() => {
         if (provider) {

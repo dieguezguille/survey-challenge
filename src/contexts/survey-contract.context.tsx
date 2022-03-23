@@ -6,6 +6,7 @@ import React, {
     useCallback,
     useContext,
     useEffect,
+    useMemo,
     useState,
 } from 'react';
 
@@ -95,38 +96,39 @@ const SurveyContractProvider: React.FC = ({ children }) => {
         }
     }, [address, contract, enqueueSnackbar, hideLoader, showLoader]);
 
-    const handleTransactionReceipt = async (
-        transactionReceipt: ethers.ContractReceipt
-    ) => {
-        const transferEvent = transactionReceipt.events?.find(
-            (event) => event.event === 'Transfer'
-        );
+    const handleTransactionReceipt = useCallback(
+        async (transactionReceipt: ethers.ContractReceipt) => {
+            const transferEvent = transactionReceipt.events?.find(
+                (event) => event.event === 'Transfer'
+            );
 
-        if (transferEvent && transferEvent.args) {
-            const eventArgs: ITransferEvent = {
-                from: transferEvent.args['from'],
-                to: transferEvent.args['to'],
-                value: transferEvent.args['value'],
-            };
+            if (transferEvent && transferEvent.args) {
+                const eventArgs: ITransferEvent = {
+                    from: transferEvent.args['from'],
+                    to: transferEvent.args['to'],
+                    value: transferEvent.args['value'],
+                };
 
-            if (eventArgs.from === ethers.constants.AddressZero) {
-                const tokensReceived = parseInt(
-                    ethers.utils.formatUnits(eventArgs.value)
-                );
-                enqueueSnackbar(
-                    `Received ${tokensReceived} ${
-                        tokensReceived > 1 ? 'tokens' : 'token'
-                    }!`,
-                    {
-                        variant: 'success',
-                    }
-                );
-                await getBalance();
+                if (eventArgs.from === ethers.constants.AddressZero) {
+                    const tokensReceived = parseInt(
+                        ethers.utils.formatUnits(eventArgs.value)
+                    );
+                    enqueueSnackbar(
+                        `Received ${tokensReceived} ${
+                            tokensReceived > 1 ? 'tokens' : 'token'
+                        }!`,
+                        {
+                            variant: 'success',
+                        }
+                    );
+                    await getBalance();
+                }
             }
-        }
-    };
+        },
+        [enqueueSnackbar, getBalance]
+    );
 
-    const submitSurvey = async () => {
+    const submitSurvey = useCallback(async () => {
         showLoader();
         try {
             if (contract && surveyResult) {
@@ -148,15 +150,25 @@ const SurveyContractProvider: React.FC = ({ children }) => {
         } finally {
             hideLoader();
         }
-    };
-
-    const contextValue = {
-        balance,
-        setBalance,
+    }, [
         contract,
-        setContract,
-        submitSurvey,
-    };
+        enqueueSnackbar,
+        handleTransactionReceipt,
+        hideLoader,
+        showLoader,
+        surveyResult,
+    ]);
+
+    const contextValue = useMemo(
+        () => ({
+            balance,
+            setBalance,
+            contract,
+            setContract,
+            submitSurvey,
+        }),
+        [balance, contract, submitSurvey]
+    );
 
     useEffect(() => {
         if (!contract) {

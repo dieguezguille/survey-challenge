@@ -3,6 +3,8 @@ import React, {
     createContext,
     Dispatch,
     SetStateAction,
+    useCallback,
+    useMemo,
     useState,
 } from 'react';
 
@@ -52,7 +54,7 @@ const AppProvider: React.FC = ({ children }) => {
     >(undefined);
     const [isSurveyFinished, setIsSurveyFinished] = useState<boolean>(false);
 
-    const getDailySurvey = async () => {
+    const getDailySurvey = useCallback(async () => {
         showLoader();
         try {
             const dailySurvey: ISurvey = await getSurvey();
@@ -68,7 +70,7 @@ const AppProvider: React.FC = ({ children }) => {
         } finally {
             hideLoader();
         }
-    };
+    }, [enqueueSnackbar, hideLoader, showLoader]);
 
     const saveAnswer = (surveyId: number, answerId: number) => {
         setSurveyResult((previousState) => {
@@ -82,7 +84,7 @@ const AppProvider: React.FC = ({ children }) => {
         });
     };
 
-    const getNextQuestion = () => {
+    const getNextQuestion = useCallback(() => {
         showLoader();
         try {
             if (survey) {
@@ -110,19 +112,30 @@ const AppProvider: React.FC = ({ children }) => {
         } finally {
             hideLoader();
         }
-    };
+    }, [enqueueSnackbar, hideLoader, showLoader, survey]);
 
-    const contextValue = {
-        isLoading,
-        setIsLoading,
-        surveyResult,
-        isSurveyFinished,
-        currentQuestion,
-        survey,
-        getDailySurvey,
-        getNextQuestion,
-        saveAnswer,
-    };
+    const contextValue: AppContextType = useMemo(
+        () => ({
+            isLoading,
+            setIsLoading,
+            surveyResult,
+            isSurveyFinished,
+            currentQuestion,
+            survey,
+            getDailySurvey,
+            getNextQuestion,
+            saveAnswer,
+        }),
+        [
+            currentQuestion,
+            getDailySurvey,
+            getNextQuestion,
+            isLoading,
+            isSurveyFinished,
+            survey,
+            surveyResult,
+        ]
+    );
 
     return (
         <AppContext.Provider value={contextValue}>
