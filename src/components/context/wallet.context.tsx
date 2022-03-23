@@ -47,8 +47,12 @@ const defaultValues: WalletContextType = {
 
 export const WalletContext = createContext(defaultValues);
 
-const { REACT_APP_CHAIN_ID, REACT_APP_CHAIN_NUMBER, REACT_APP_CHAIN_RPC_URL } =
-    process.env;
+const {
+    REACT_APP_CHAIN_ID,
+    REACT_APP_CHAIN_NUMBER,
+    REACT_APP_CHAIN_NAME,
+    REACT_APP_CHAIN_RPC_URL,
+} = process.env;
 
 const WalletContextProvider: React.FC = ({ children }) => {
     const { enqueueSnackbar } = useSnackbar();
@@ -76,9 +80,9 @@ const WalletContextProvider: React.FC = ({ children }) => {
         try {
             setIsConnected(false);
             setAddress(undefined);
-            enqueueSnackbar('Disconnected from Metamask', { variant: 'info' });
+            enqueueSnackbar('Disconnected from Metamask.', { variant: 'info' });
         } catch (error) {
-            enqueueSnackbar('Unable to disconnect from Metamask', {
+            enqueueSnackbar('Unable to disconnect from Metamask.', {
                 variant: 'error',
             });
         } finally {
@@ -94,7 +98,7 @@ const WalletContextProvider: React.FC = ({ children }) => {
             const chain = network.chainId;
             if (chain && chain.toString() !== REACT_APP_CHAIN_NUMBER) {
                 enqueueSnackbar(
-                    'Unsupported chain detected. Make sure to be connected to Ropsten Network',
+                    `Unsupported chain detected. Make sure to connect to ${REACT_APP_CHAIN_NAME}.`,
                     { variant: 'error' }
                 );
                 setIsInvalidChain(true);
@@ -103,9 +107,12 @@ const WalletContextProvider: React.FC = ({ children }) => {
                 setIsInvalidChain(false);
             }
         } catch (error) {
-            enqueueSnackbar('Error validating current network', {
-                variant: 'error',
-            });
+            enqueueSnackbar(
+                'Error validating current network. See console for details.',
+                {
+                    variant: 'error',
+                }
+            );
             console.log(error);
         } finally {
             setIsLoading(false);
@@ -131,7 +138,7 @@ const WalletContextProvider: React.FC = ({ children }) => {
                     ]);
                 } catch (error) {
                     enqueueSnackbar(
-                        'Unable to add Ropsten Testnet to Metamask',
+                        `Unable to add ${REACT_APP_CHAIN_NAME} to Metamask.`,
                         { variant: 'error' }
                     );
                     console.log(error);
@@ -157,7 +164,7 @@ const WalletContextProvider: React.FC = ({ children }) => {
                 if (result && result.length > 0) {
                     setAddress(result[0]);
                     setIsConnected(true);
-                    enqueueSnackbar('Connected to Metamask', {
+                    enqueueSnackbar('Connected to Metamask.', {
                         variant: 'info',
                     });
                 }

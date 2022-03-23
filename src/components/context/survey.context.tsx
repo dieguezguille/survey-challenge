@@ -51,8 +51,8 @@ const { REACT_APP_CONTRACT_ADDRESS } = process.env;
 
 const SurveyContextProvider: React.FC = ({ children }) => {
     const { setIsLoading } = useContext(AppContext);
-    const { address, provider } = useContext(WalletContext);
     const { enqueueSnackbar } = useSnackbar();
+    const { address, provider } = useContext(WalletContext);
 
     const [balance, setBalance] = useState<number>(defaultValues.balance);
     const [contract, setContract] = useState<Contract | undefined>(undefined);
@@ -77,9 +77,12 @@ const SurveyContextProvider: React.FC = ({ children }) => {
                 setBalance(parseFloat(newBalance));
             }
         } catch (error) {
-            enqueueSnackbar('Error getting token balance.', {
-                variant: 'error',
-            });
+            enqueueSnackbar(
+                'Error getting token balance. See console for details.',
+                {
+                    variant: 'error',
+                }
+            );
             console.log(error);
         } finally {
             setIsLoading(false);
@@ -178,9 +181,13 @@ const SurveyContextProvider: React.FC = ({ children }) => {
                 });
             }
         } catch (error) {
-            enqueueSnackbar('Failed to get next question.', {
-                variant: 'error',
-            });
+            enqueueSnackbar(
+                'Failed to get next question. See console for details.',
+                {
+                    variant: 'error',
+                }
+            );
+            console.log(error);
         } finally {
             setIsLoading(false);
         }
@@ -192,9 +199,12 @@ const SurveyContextProvider: React.FC = ({ children }) => {
             const result: ISurvey = await getSurvey();
             setSurvey(result);
         } catch (error) {
-            enqueueSnackbar('Failed to get daily survey.', {
-                variant: 'error',
-            });
+            enqueueSnackbar(
+                'Failed to get daily survey. See console for details.',
+                {
+                    variant: 'error',
+                }
+            );
             console.log(error);
         } finally {
             setIsLoading(false);
@@ -222,9 +232,12 @@ const SurveyContextProvider: React.FC = ({ children }) => {
                 });
             }
         } catch (error) {
-            enqueueSnackbar('Load contract operation failed.', {
-                variant: 'error',
-            });
+            enqueueSnackbar(
+                'Load contract operation failed. See console for details.',
+                {
+                    variant: 'error',
+                }
+            );
             console.log(error);
         } finally {
             setIsLoading(false);
