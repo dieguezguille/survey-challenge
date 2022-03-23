@@ -8,7 +8,7 @@ const Loader: React.FC = () => {
     const { isLoading } = useContext(AppContext);
 
     return (
-        <StyledBackdrop open={isLoading}>
+        <StyledBackdrop aria-label="loader" open={isLoading}>
             <CircularProgress />
         </StyledBackdrop>
     );

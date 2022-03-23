@@ -11,7 +11,7 @@ import { getSurvey } from '../adapters/survey.adapter';
 import { ISurvey, ISurveyQuestion } from '../models/survey.model';
 import { ISurveyResult } from '../models/survey-result.model';
 
-type AppContextType = {
+export type AppContextType = {
     isLoading: boolean;
     setIsLoading: Dispatch<SetStateAction<boolean>>;
     surveyResult: ISurveyResult | undefined;
