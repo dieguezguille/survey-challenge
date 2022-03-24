@@ -111,7 +111,7 @@ Here are some screenshots of the app working. You can tell about the project str
 
 -   The application is live on `Heroku`. The latest version of the `main` can be found running [here](https://survey-web3-challenge.herokuapp.com/).
 
--   Due to the challenge description not providing an actual API to fetch the `Daily Trivia` the sample JSON was served from the `/public` directory. Nevertheless, it is possible to change the URL and point to an actual API just by changing the variable `REACT_APP_SURVEY_URL` on the `.env` FILE.
+-   Due to the challenge description not providing an actual API to fetch the `Daily Trivia` the sample JSON was served from the `/public` directory. Nevertheless, it is possible to change the URL and point to an actual API just by changing the variable `REACT_APP_SURVEY_URL` on the `.env` file.
 
 -   If any Sentry errors are seen in the console output, know this happens because you probably have an ad blocker of some sort installed as a browser extension.
 
